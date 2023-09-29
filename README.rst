@@ -1,27 +1,21 @@
-======================
-pyreveal
-======================
+================
+PyReveal Library
+================
 
-A Python library designed to simplify the creation of presentations using Reveal.js.
+PyReveal is a Python library that allows users to generate Reveal.js presentations programmatically. With PyReveal, you can easily create slides, set themes, transitions, and even add custom backgrounds like images or videos.
 
-Overview
+Features
 ========
 
-With an intuitive Pythonic interface, users can effortlessly generate dynamic and interactive web-based presentations without delving into the intricacies of HTML or JavaScript.
-
-Key Features
-------------
-
-- **Pythonic Interface**: Create slides, set themes, and define transitions all through a clean and straightforward Python API.
-- **Customizable**: Choose from a variety of themes and transitions to make your presentation stand out.
-- **Export to PDF**: Easily export your presentation to a PDF format for offline viewing or sharing.
-- **Error Handling**: Built-in validation ensures that your presentation looks and functions as expected.
-- **No Web Development Required**: While `pyreveal` leverages the power of Reveal.js, users don't need any prior web development experience.
+- Create Reveal.js presentations using Python.
+- Support for slide themes and transitions.
+- Error handling and validation for slide content.
+- Export presentations to HTML.
+- Support for slide backgrounds, including images, videos, and colors.
+- Parallax background support.
 
 Installation
 ============
-
-To install `pyreveal`, use pip:
 
 .. code-block:: bash
 
@@ -32,12 +26,15 @@ Usage
 
 .. code-block:: python
 
-   from pyreveal import PyReveal
+   from pyreveal import PyReveal, ImageBackground
 
-   presentation = PyReveal()
-   # ... your code to create slides ...
+   presentation = PyReveal(title="My Presentation", theme="white", transition="slide")
+   presentation.add_slide("Welcome to PyReveal!")
+   bg_image = ImageBackground(image_url="path/to/image.jpg")
+   presentation.add_slide("This slide has a background image!", background=bg_image)
+   presentation.save_to_file("my_presentation.html")
 
-   presentation.show()
+For more advanced usage and features, please refer to the documentation.
 
 Contribute
 ==========

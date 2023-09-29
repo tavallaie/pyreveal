@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "pyreveal"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Python library to simplify the creation of presentations using Reveal.js."
 authors = ["Ali Tavallaie <a.tavallaie@gmail.com>"]
 license = "MIT"
+readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = "^3.10"
