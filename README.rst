@@ -27,17 +27,17 @@ To install `pyreveal`, use pip:
 
    pip install pyreveal
 
-.. Usage
-.. =====
+Usage
+=====
 
-.. .. code-block:: python
+.. code-block:: python
 
-..    from pyreveal import PyReveal
+   from pyreveal import PyReveal
 
-..    presentation = PyReveal()
-..    # ... your code to create slides ...
+   presentation = PyReveal()
+   # ... your code to create slides ...
 
-..    presentation.show()
+   presentation.show()
 
 Contribute
 ==========
