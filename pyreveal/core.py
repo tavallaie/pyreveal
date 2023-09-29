@@ -10,6 +10,7 @@ from .exceptions import (
     SlideGroupNotFoundError,
 )
 from .utils import generate_slides_html, wrap_in_html_template
+from .background import ImageBackground, VideoBackground
 
 
 class PyReveal:
@@ -35,7 +36,7 @@ class PyReveal:
         self.set_theme(theme)
         self.set_transition(transition)
 
-    def add_slide(self, content, title=None, group=None):
+    def add_slide(self, content, title=None, group=None, background=None):
         if not content.strip():
             raise EmptySlideContentError("Slide content cannot be empty.")
 
@@ -47,7 +48,12 @@ class PyReveal:
         if group and not any(slide["title"] == group for slide in self.slides):
             raise SlideGroupNotFoundError(group)
 
-        slide = {"title": title, "content": content, "group": group}
+        slide = {
+            "title": title,
+            "content": content,
+            "group": group,
+            "background": background,
+        }
         self.slides.append(slide)
 
     def set_theme(self, theme):
@@ -75,6 +81,28 @@ class PyReveal:
         presentations_dir = "presentations"
         if not os.path.exists(presentations_dir):
             os.makedirs(presentations_dir)
+
+        # Ensure the assets directory exists inside presentations
+        assets_dir = os.path.join(presentations_dir, "assets")
+        if not os.path.exists(assets_dir):
+            os.makedirs(assets_dir)
+
+        # Copy assets (background images, videos, etc.) to the assets directory and update slide references
+
+        for slide in self.slides:
+            background = slide.get("background")
+            if background and isinstance(background, ImageBackground):
+                # Copy the image and update the slide's image URL
+                new_image_path = shutil.copy(background.image_url, assets_dir)
+                slide["background"].image_url = os.path.relpath(
+                    new_image_path, presentations_dir
+                )
+            elif background and isinstance(background, VideoBackground):
+                # Copy the video and update the slide's video URL
+                new_video_path = shutil.copy(background.video_url, assets_dir)
+                slide["background"].video_url = os.path.relpath(
+                    new_video_path, presentations_dir
+                )
 
         # Locate the Reveal.js assets bundled with your package
         revealjs_source = pkg_resources.resource_filename("pyreveal", "revealjs")

@@ -9,19 +9,27 @@ def generate_slides_html(slides):
         if slide["title"] in processed_titles:
             continue
 
+        background_html = (
+            slide["background"].generate_html() if "background" in slide else ""
+        )
+
         if slide["group"]:
             # This slide is part of a group
             group_slides = [s for s in slides if s["group"] == slide["group"]]
             vertical_slides_html = "\n".join(
                 [
-                    f"<section>{sub_slide['content']}</section>"
+                    f"<section {sub_slide['background'].generate_html() if 'background' in sub_slide else ''}>{sub_slide['content']}</section>"
                     for sub_slide in group_slides
                 ]
             )
-            slides_html.append(f"<section>\n{vertical_slides_html}\n</section>")
+            slides_html.append(
+                f"<section {background_html}>\n{vertical_slides_html}\n</section>"
+            )
             processed_titles.add(slide["group"])
         else:
-            slides_html.append(f"<section>{slide['content']}</section>")
+            slides_html.append(
+                f"<section {background_html}>{slide['content']}</section>"
+            )
 
     return "\n".join(slides_html)
 
