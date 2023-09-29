@@ -2,8 +2,28 @@
 
 
 def generate_slides_html(slides):
-    """Generate the HTML representation for each slide."""
-    return "\n".join([f"<section>{slide['content']}</section>" for slide in slides])
+    slides_html = []
+    processed_titles = set()
+
+    for slide in slides:
+        if slide["title"] in processed_titles:
+            continue
+
+        if slide["group"]:
+            # This slide is part of a group
+            group_slides = [s for s in slides if s["group"] == slide["group"]]
+            vertical_slides_html = "\n".join(
+                [
+                    f"<section>{sub_slide['content']}</section>"
+                    for sub_slide in group_slides
+                ]
+            )
+            slides_html.append(f"<section>\n{vertical_slides_html}\n</section>")
+            processed_titles.add(slide["group"])
+        else:
+            slides_html.append(f"<section>{slide['content']}</section>")
+
+    return "\n".join(slides_html)
 
 
 def wrap_in_html_template(title, theme, transition, slides_html):

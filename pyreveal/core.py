@@ -1,4 +1,3 @@
-# pyreveal.py
 import os
 import shutil
 import pkg_resources
@@ -7,6 +6,8 @@ from .exceptions import (
     InvalidThemeError,
     InvalidTransitionError,
     EmptySlideContentError,
+    DuplicateSlideTitleError,
+    SlideGroupNotFoundError,
 )
 from .utils import generate_slides_html, wrap_in_html_template
 
@@ -34,10 +35,19 @@ class PyReveal:
         self.set_theme(theme)
         self.set_transition(transition)
 
-    def add_slide(self, content, title=None):
+    def add_slide(self, content, title=None, group=None):
         if not content.strip():
             raise EmptySlideContentError("Slide content cannot be empty.")
-        slide = {"title": title, "content": content}
+
+        # Check for duplicate slide titles
+        if title and any(slide["title"] == title for slide in self.slides):
+            raise DuplicateSlideTitleError(title)
+
+        # If the slide is part of a group, validate the group
+        if group and not any(slide["title"] == group for slide in self.slides):
+            raise SlideGroupNotFoundError(group)
+
+        slide = {"title": title, "content": content, "group": group}
         self.slides.append(slide)
 
     def set_theme(self, theme):
