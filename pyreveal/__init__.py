@@ -1,6 +1,9 @@
 # __init__.py
 
-from .core import PyReveal
+from .pyreveal import PyReveal
+from .slide import Slide
+from .element import Element, ImageElement, VideoElement
+from .style import Style
 from .background import (
     BackgroundFactory,
     VideoBackground,
