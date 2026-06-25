@@ -198,19 +198,20 @@ def _hero_button_styles() -> tuple[str, str]:
     return btn_primary, btn_secondary
 
 
-def _hero_buttons_html() -> str:
+def _hero_buttons_html(*, break_out_of_frame: bool = False) -> str:
     btn_primary, btn_secondary = _hero_button_styles()
+    frame_target = ' target="_top"' if break_out_of_frame else ""
     return (
         '<p style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0;">'
-        f'<a href="{DOCS_URL}/getting-started/quickstart/" style="{btn_primary}">'
+        f'<a href="{DOCS_URL}/getting-started/quickstart/" style="{btn_primary}"{frame_target}>'
         "Get started</a>"
-        f'<a href="{DOCS_URL}/reference/api/" style="{btn_secondary}">'
+        f'<a href="{DOCS_URL}/reference/api/" style="{btn_secondary}"{frame_target}>'
         "API reference</a>"
         "</p>"
     )
 
 
-def _home_hero_slide() -> Slide:
+def _home_hero_slide(*, break_out_of_frame: bool = False) -> Slide:
     """Docs landing page hero (overrides/home.html + docs/index.md + Three.js mesh)."""
     slide = Slide(attributes={"class": "demo-home-slide"})
     slide.add(
@@ -230,7 +231,7 @@ def _home_hero_slide() -> Slide:
         f'text-shadow: 0 1px 16px rgba(0, 0, 0, 0.4);">{HERO_TAGLINE}</p>'
         f'<p style="margin: 0 0 1.25rem; color: rgba(255, 255, 255, 0.82);">'
         f"<small><em>{HERO_NOTE}</em></small></p>"
-        f"{_hero_buttons_html()}"
+        f"{_hero_buttons_html(break_out_of_frame=break_out_of_frame)}"
         "</div>"
         "</div>"
         '<div class="demo-home-slide-placeholder" aria-hidden="true"></div>'
@@ -238,9 +239,9 @@ def _home_hero_slide() -> Slide:
     return slide
 
 
-def build() -> Presentation:
+def build(*, docs_embed: bool = False) -> Presentation:
     # ── Title (docs homepage) ────────────────────────────────────────────────
-    title = _home_hero_slide()
+    title = _home_hero_slide(break_out_of_frame=docs_embed)
 
     hello = Slide.make_heading("Hello There")
     hello.text(
@@ -771,7 +772,7 @@ def build() -> Presentation:
     end = Slide(attributes={"style": "text-align: left"})
     end.add(
         "<h1>THE END</h1>"
-        f"{_hero_buttons_html()}"
+        f"{_hero_buttons_html(break_out_of_frame=docs_embed)}"
         "<p>"
         f'<a href="{GITHUB_URL}">'
         "Source code on GitHub</a>"
@@ -869,7 +870,7 @@ if __name__ == "__main__":
         DOCS_URL = ".."
 
     path = output("demo.html", output_dir=out_dir)
-    build().save(path, pdf_hint=not args.docs)
+    build(docs_embed=args.docs).save(path, pdf_hint=not args.docs)
     _write_index(path)
     copy_assets(path.parent)
 
