@@ -17,6 +17,17 @@ slide = Slide(
 )
 ```
 
+## Gradient
+
+```python
+from pyreveal import GradientBackground, Slide
+
+slide = Slide(
+    content="<h2>Gradient</h2>",
+    background=GradientBackground("linear-gradient(to bottom, #283b95, #17b2c3)"),
+)
+```
+
 ## Image
 
 ```python
@@ -46,8 +57,20 @@ from pyreveal import IframeBackground, Slide
 
 slide = Slide(
     content="<h2>Live page</h2>",
-    background=IframeBackground("https://example.com"),
+    background=IframeBackground(
+        "https://example.com",
+        interactive=True,
+        preload=True,
+    ),
 )
+```
+
+## Video with multiple formats
+
+```python
+from pyreveal import VideoBackground
+
+VideoBackground(sources=["clip.mp4", "clip.webm"], preload=True, color="#000000")
 ```
 
 ## Shared options

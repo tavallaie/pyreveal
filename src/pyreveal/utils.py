@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from html import escape
+
 from .config import (
     plugin_initialize_list,
     plugin_script_tags,
@@ -13,6 +15,10 @@ def wrap_in_html_template(
     slides_html: str,
     initialize_options: dict,
     plugins: list[str] | None = None,
+    *,
+    math_engine: str = "katex",
+    extra_css: list[str] | None = None,
+    inline_css: str | None = None,
 ) -> str:
     """Wrap slides HTML in a Reveal.js 6.x-compatible template."""
     plugins = plugins or []
@@ -23,8 +29,15 @@ def wrap_in_html_template(
         if "highlight" in plugins
         else ""
     )
+    extra_css_links = "".join(
+        f'\n    <link rel="stylesheet" href="{escape(path)}">'
+        for path in (extra_css or [])
+    )
+    inline_style = (
+        f"\n    <style>\n{inline_css}\n    </style>" if inline_css else ""
+    )
     plugin_init = (
-        f",\n            plugins: [{plugin_initialize_list(plugins)}]"
+        f",\n            plugins: [{plugin_initialize_list(plugins, math_engine=math_engine)}]"
         if plugins
         else ""
     )
@@ -35,10 +48,10 @@ def wrap_in_html_template(
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
+    <title>{escape(title)}</title>
     <link rel="stylesheet" href="revealjs/dist/reset.css">
     <link rel="stylesheet" href="revealjs/dist/reveal.css">
-    <link rel="stylesheet" href="revealjs/dist/theme/{theme}.css">{highlight_css}
+    <link rel="stylesheet" href="revealjs/dist/theme/{theme}.css">{highlight_css}{extra_css_links}{inline_style}
 </head>
 <body>
     <div class="reveal">

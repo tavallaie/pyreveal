@@ -31,3 +31,8 @@ def test_plugin_script_tags():
 def test_plugin_initialize_list():
     names = plugin_initialize_list(["notes", "zoom"])
     assert names == "RevealNotes, RevealZoom"
+
+
+def test_plugin_initialize_list_math_engine():
+    names = plugin_initialize_list(["math"], math_engine="mathjax4")
+    assert names == "RevealMath.MathJax4"

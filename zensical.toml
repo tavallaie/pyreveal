@@ -19,6 +19,8 @@ nav = [
         "user-guide/elements.md",
         "user-guide/backgrounds.md",
         "user-guide/fragments.md",
+        "user-guide/layouts.md",
+        "user-guide/math.md",
         "user-guide/plugins.md",
         "user-guide/configuration.md",
     ]},

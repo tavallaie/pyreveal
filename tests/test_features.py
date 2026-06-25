@@ -21,6 +21,7 @@ def test_enable_plugins_in_html():
     assert "RevealNotes" in html
     assert "RevealHighlight" in html
     assert "RevealMarkdown" in html
+    assert "RevealMath" not in html
 
 
 def test_enable_plugins_invalid_name():

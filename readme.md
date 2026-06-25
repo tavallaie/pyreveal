@@ -6,8 +6,9 @@ PyReveal is a Python library for building [Reveal.js](https://revealjs.com/) pre
 
 - Build slides with `Slide`, `Element`, and `Style` objects
 - Themes, transitions, and backgrounds (color, image, video, iframe)
-- Fragments, speaker notes, code blocks, and Markdown slides
-- `enable_plugins()` for notes, highlight, markdown, math, search, and zoom
+- Fragments, speaker notes, code blocks, math, Markdown, and layout helpers
+- Backgrounds: color, gradient, image, video (multi-format), iframe (interactive)
+- `enable_plugins()` for notes, highlight, markdown, math (KaTeX/MathJax), search, zoom
 - `configure()` for Reveal.js options (hash URLs, progress bar, scroll view, etc.)
 - Export self-contained HTML with bundled reveal.js assets
 

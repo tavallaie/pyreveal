@@ -11,9 +11,15 @@ PLUGIN_GLOBALS = {
     "notes": "RevealNotes",
     "highlight": "RevealHighlight",
     "markdown": "RevealMarkdown",
-    "math": "RevealMath",
     "search": "RevealSearch",
     "zoom": "RevealZoom",
+}
+
+MATH_ENGINES = {
+    "katex": "RevealMath.KaTeX",
+    "mathjax2": "RevealMath.MathJax2",
+    "mathjax3": "RevealMath.MathJax3",
+    "mathjax4": "RevealMath.MathJax4",
 }
 
 
@@ -40,7 +46,14 @@ def plugin_script_tags(plugins: list[str]) -> str:
     )
 
 
-def plugin_initialize_list(plugins: list[str]) -> str:
+def plugin_initialize_list(
+    plugins: list[str], *, math_engine: str = "katex"
+) -> str:
     """Return the plugins array for Reveal.initialize()."""
-    names = [PLUGIN_GLOBALS[name] for name in plugins]
+    names: list[str] = []
+    for name in plugins:
+        if name == "math":
+            names.append(MATH_ENGINES.get(math_engine, MATH_ENGINES["katex"]))
+        else:
+            names.append(PLUGIN_GLOBALS[name])
     return ", ".join(names)

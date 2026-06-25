@@ -42,6 +42,13 @@ def test_background_factory_iframe():
     assert isinstance(bg, IframeBackground)
 
 
+def test_background_factory_gradient():
+    bg = BackgroundFactory.create_background(
+        "gradient", "linear-gradient(to bottom, #111, #222)"
+    )
+    assert "data-background-gradient=" in bg.generate_html()
+
+
 def test_background_factory_invalid_type():
     with pytest.raises(InvalidBackgroundTypeError):
-        BackgroundFactory.create_background("gradient", "#fff")
+        BackgroundFactory.create_background("pattern", "#fff")

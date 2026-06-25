@@ -11,6 +11,9 @@ icon: lucide/book-open
 | `PyReveal(title, theme, transition)` | Create a presentation |
 | `add_slide(slide)` | Add a `Slide` |
 | `add_auto_animate_sequence(frames, easing=...)` | Add matched auto-animate slides |
+| `add_stylesheet(path)` | Link extra CSS in output HTML |
+| `add_inline_css(css)` | Embed CSS in output HTML |
+| `enable_plugins(..., math_engine=...)` | Enable plugins (KaTeX/MathJax for math) |
 | `add_group(slides)` | Add a vertical stack |
 | `configure(**options)` | Pass options to `Reveal.initialize()` |
 | `enable_plugins(*names)` | Enable reveal.js plugins |
@@ -29,6 +32,7 @@ icon: lucide/book-open
 | `markdown` | Markdown body (requires markdown plugin) |
 | `background` | `Background` instance |
 | `notes` | Speaker notes text |
+| `slide_id`, `visibility` | Hash target (`id`) and `data-visibility` |
 | `transition`, `state`, `auto_slide` | Per-slide reveal.js attributes |
 | `auto_animate`, `auto_animate_easing` | Auto-animate between slides |
 | `add_element(element)` | Add an `Element` |
@@ -45,14 +49,19 @@ icon: lucide/book-open
 | `VideoElement` | `<video>` |
 | `CodeElement` | Syntax-highlighted `<pre><code>` |
 | `MarkdownElement` | Inline Markdown block |
+| `MathElement` | LaTeX math (requires math plugin) |
+| `LinkElement` | Anchor with optional `data-preview-link` |
+| `Layout` / `Stack` / `HStack` / `VStack` | reveal.js layout containers |
+| `FitText` | `r-fit-text` heading |
 
 ## Backgrounds
 
 | Class | reveal.js attribute |
 | ----- | ------------------- |
 | `ColorBackground` | `data-background-color` |
+| `GradientBackground` | `data-background-gradient` |
 | `ImageBackground` | `data-background` |
-| `VideoBackground` | `data-background-video` |
+| `VideoBackground` | `data-background-video` (comma-separated sources) |
 | `IframeBackground` | `data-background-iframe` |
 
 All backgrounds support optional `opacity`, `position`, `repeat`, `transition`, and `parallax`.

@@ -112,28 +112,118 @@ class SpeakerNotes:
 
 
 class ImageElement(Element):
-    def __init__(self, image_url: str, alt_text: str = "", **kwargs):
+    def __init__(
+        self,
+        image_url: str,
+        alt_text: str = "",
+        *,
+        stretch: bool = False,
+        frame: bool = False,
+        lazy: bool = False,
+        **kwargs,
+    ):
         super().__init__(content=image_url, tag="img", **kwargs)
         self.alt_text = alt_text
+        self.lazy = lazy
+        classes: list[str] = []
+        if stretch:
+            classes.append("r-stretch")
+        if frame:
+            classes.append("r-frame")
+        if classes:
+            existing = self.attributes.get("class", "")
+            self.attributes["class"] = " ".join(
+                filter(None, [existing, *classes])
+            )
 
     def generate_html(self) -> str:
         children_html = "".join(child.generate_html() for child in self.children)
+        src_attr = (
+            f'data-src="{escape(self.content)}"'
+            if self.lazy
+            else f'src="{escape(self.content)}"'
+        )
         return (
-            f'<img src="{escape(self.content)}" alt="{escape(self.alt_text)}"'
-            f"{self._data_id_attr()}{self._style_attr()} />{children_html}"
+            f"<img {src_attr} alt=\"{escape(self.alt_text)}\""
+            f"{self._attributes_str()}{self._data_id_attr()}{self._style_attr()} />"
+            f"{children_html}"
         )
 
 
 class VideoElement(Element):
-    def __init__(self, video_url: str, **kwargs):
+    def __init__(
+        self,
+        video_url: str,
+        *,
+        stretch: bool = False,
+        controls: bool = False,
+        autoplay: bool = False,
+        loop: bool = False,
+        muted: bool = False,
+        **kwargs,
+    ):
         super().__init__(content=video_url, tag="video", **kwargs)
+        if stretch:
+            existing = self.attributes.get("class", "")
+            self.attributes["class"] = " ".join(
+                filter(None, [existing, "r-stretch"])
+            )
+        if controls:
+            self.attributes["controls"] = "controls"
+        if autoplay:
+            self.attributes["autoplay"] = "autoplay"
+        if loop:
+            self.attributes["loop"] = "loop"
+        if muted:
+            self.attributes["muted"] = "muted"
 
     def generate_html(self) -> str:
         children_html = "".join(child.generate_html() for child in self.children)
         return (
-            f'<video src="{escape(self.content)}"{self._data_id_attr()}'
-            f'{self._style_attr()}>{children_html}</video>'
+            f'<video src="{escape(self.content)}"{self._attributes_str()}'
+            f"{self._data_id_attr()}{self._style_attr()}>{children_html}</video>"
         )
+
+
+class LinkElement(Element):
+    """Internal or external link with optional instant preview."""
+
+    def __init__(
+        self,
+        href: str,
+        text: str,
+        *,
+        preview: bool = False,
+        target: str | None = None,
+        **kwargs,
+    ):
+        attributes = kwargs.pop("attributes", {})
+        attributes["href"] = href
+        if preview:
+            attributes["data-preview-link"] = href
+        if target:
+            attributes["target"] = target
+        super().__init__(tag="a", content=text, attributes=attributes, **kwargs)
+
+
+class MathElement(Element):
+    """LaTeX math (requires the math plugin)."""
+
+    def __init__(
+        self,
+        latex: str,
+        *,
+        display: bool = False,
+        **kwargs,
+    ):
+        super().__init__(tag="span", content="", **kwargs)
+        self.latex = latex
+        self.display = display
+
+    def generate_html(self) -> str:
+        if self.display:
+            return f"\\[{self.latex}\\]"
+        return f"\\({self.latex}\\)"
 
 
 class CodeElement(Element):

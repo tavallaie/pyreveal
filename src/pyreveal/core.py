@@ -5,7 +5,7 @@ from typing import Any
 
 from .auto_animate import AutoAnimate
 from .background import Background
-from .config import VALID_PLUGINS, build_initialize_options
+from .config import MATH_ENGINES, VALID_PLUGINS, build_initialize_options
 from .element import Element
 from .exceptions import InvalidThemeError, InvalidTransitionError
 from .helpers import copy_assets_for_slide, copy_element_assets
@@ -47,6 +47,9 @@ class PyReveal:
         self.background: Background | None = None
         self._config: dict[str, Any] = {}
         self._plugins: list[str] = []
+        self._math_engine = "katex"
+        self._extra_css: list[str] = []
+        self._inline_css: str | None = None
         self.set_theme(theme)
         self.set_transition(transition)
 
@@ -60,11 +63,22 @@ class PyReveal:
         self._config.update(options)
         return self
 
-    def enable_plugins(self, *names: str) -> "PyReveal":
+    def enable_plugins(
+        self, *names: str, math_engine: str = "katex"
+    ) -> "PyReveal":
         """Enable bundled reveal.js plugins in the generated HTML.
 
         Supported: ``notes``, ``highlight``, ``markdown``, ``math``, ``search``, ``zoom``.
+
+        When enabling ``math``, choose an engine: ``katex``, ``mathjax2``,
+        ``mathjax3``, or ``mathjax4``.
         """
+        if math_engine not in MATH_ENGINES:
+            raise ValueError(
+                f"Unknown math engine {math_engine!r}. "
+                f"Choose from: {', '.join(MATH_ENGINES)}"
+            )
+        self._math_engine = math_engine
         ordered: list[str] = []
         for name in names:
             if name not in VALID_PLUGINS:
@@ -74,6 +88,16 @@ class PyReveal:
             if name not in ordered:
                 ordered.append(name)
         self._plugins = ordered
+        return self
+
+    def add_stylesheet(self, path: str) -> "PyReveal":
+        """Link an extra CSS file in the generated HTML (relative to output)."""
+        self._extra_css.append(path)
+        return self
+
+    def add_inline_css(self, css: str) -> "PyReveal":
+        """Embed custom CSS in the generated HTML ``<head>``."""
+        self._inline_css = css
         return self
 
     def add_slide(self, slide: Slide) -> None:
@@ -149,9 +173,7 @@ class PyReveal:
         return item.render(default_background=self.background)
 
     def generate_html(self) -> str:
-        rendered = [
-            self._render_slide_item(item) for item in self.slides
-        ]
+        rendered = [self._render_slide_item(item) for item in self.slides]
 
         initialize_options = build_initialize_options(self.transition, self._config)
         return wrap_in_html_template(
@@ -160,6 +182,9 @@ class PyReveal:
             "\n".join(rendered),
             initialize_options,
             plugins=self._plugins,
+            math_engine=self._math_engine,
+            extra_css=self._extra_css,
+            inline_css=self._inline_css,
         )
 
     def save_to_string(self) -> str:
@@ -175,7 +200,14 @@ class PyReveal:
                 yield item
                 yield from item.vertical_slides
 
-    def save_to_file(self, filename="presentation.html", output_dir="presentations"):
+    def save_to_file(
+        self,
+        filename="presentation.html",
+        output_dir="presentations",
+        *,
+        copy_revealjs: bool = True,
+        quiet: bool = False,
+    ):
         presentations_dir = Path(output_dir)
         presentations_dir.mkdir(parents=True, exist_ok=True)
 
@@ -187,14 +219,16 @@ class PyReveal:
             for element in slide.elements:
                 copy_element_assets(element, assets_dir, presentations_dir)
 
-        revealjs_ref = files("pyreveal") / "revealjs"
-        revealjs_dest = presentations_dir / "revealjs"
+        if copy_revealjs:
+            revealjs_ref = files("pyreveal") / "revealjs"
+            revealjs_dest = presentations_dir / "revealjs"
 
-        with as_file(revealjs_ref) as revealjs_source:
-            if not revealjs_dest.exists():
-                shutil.copytree(revealjs_source, revealjs_dest)
+            with as_file(revealjs_ref) as revealjs_source:
+                if not revealjs_dest.exists():
+                    shutil.copytree(revealjs_source, revealjs_dest)
 
         full_path = presentations_dir / filename
         full_path.write_text(self.generate_html(), encoding="utf-8")
 
-        print(f"Presentation saved to: {full_path}")
+        if not quiet:
+            print(f"Presentation saved to: {full_path}")

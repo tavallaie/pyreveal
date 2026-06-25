@@ -16,12 +16,14 @@ class Background:
         repeat: str | None = None,
         transition: str | None = None,
         parallax: str | None = None,
+        color: str | None = None,
     ):
         self.opacity = opacity
         self.position = position
         self.repeat = repeat
         self.transition = transition
         self.parallax = parallax
+        self.color = color
 
     def _common_attributes(self) -> str:
         attrs: list[str] = []
@@ -35,19 +37,33 @@ class Background:
             attrs.append(f'data-background-transition="{escape(self.transition)}"')
         if self.parallax:
             attrs.append(f'data-background-parallax="{escape(self.parallax)}"')
+        if self.color:
+            attrs.append(f'data-background-color="{escape(self.color)}"')
         return (" " + " ".join(attrs)) if attrs else ""
-
-    def generate_html(self) -> str:
-        raise NotImplementedError
 
 
 class ColorBackground(Background):
     def __init__(self, color: str, **kwargs):
         super().__init__(**kwargs)
-        self.color = color
+        self._bg_color = color
 
     def generate_html(self) -> str:
-        return f' data-background-color="{escape(self.color)}"{self._common_attributes()}'
+        return (
+            f' data-background-color="{escape(self._bg_color)}"'
+            f"{self._common_attributes()}"
+        )
+
+
+class GradientBackground(Background):
+    def __init__(self, gradient: str, **kwargs):
+        super().__init__(**kwargs)
+        self.gradient = gradient
+
+    def generate_html(self) -> str:
+        return (
+            f' data-background-gradient="{escape(self.gradient)}"'
+            f"{self._common_attributes()}"
+        )
 
 
 class ImageBackground(Background):
@@ -67,26 +83,55 @@ class ImageBackground(Background):
 
 
 class VideoBackground(Background):
-    def __init__(self, video_url: str, **kwargs):
+    def __init__(
+        self,
+        video_url: str | list[str] | None = None,
+        *,
+        sources: list[str] | None = None,
+        preload: bool = False,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
-        self.video_url = video_url
+        urls = sources or ([video_url] if isinstance(video_url, str) else video_url)
+        if not urls:
+            raise ValueError("VideoBackground requires at least one video URL.")
+        self.video_urls = urls
+        self.preload = preload
+
+    @property
+    def video_url(self) -> str:
+        return ",".join(self.video_urls)
 
     def generate_html(self) -> str:
+        preload_attr = " data-preload" if self.preload else ""
         return (
             f' data-background-video="{escape(self.video_url)}"'
-            f"{self._common_attributes()}"
+            f"{preload_attr}{self._common_attributes()}"
         )
 
 
 class IframeBackground(Background):
-    def __init__(self, iframe_url: str, **kwargs):
+    def __init__(
+        self,
+        iframe_url: str,
+        *,
+        interactive: bool = False,
+        preload: bool = False,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
         self.iframe_url = iframe_url
+        self.interactive = interactive
+        self.preload = preload
 
     def generate_html(self) -> str:
+        interactive_attr = (
+            " data-background-interactive" if self.interactive else ""
+        )
+        preload_attr = " data-preload" if self.preload else ""
         return (
             f' data-background-iframe="{escape(self.iframe_url)}"'
-            f"{self._common_attributes()}"
+            f"{interactive_attr}{preload_attr}{self._common_attributes()}"
         )
 
 
@@ -95,6 +140,8 @@ class BackgroundFactory:
     def create_background(bg_type: str, value: str, **kwargs) -> Background:
         if bg_type == "color":
             return ColorBackground(value, **kwargs)
+        if bg_type == "gradient":
+            return GradientBackground(value, **kwargs)
         if bg_type == "image":
             return ImageBackground(value, **kwargs)
         if bg_type == "video":

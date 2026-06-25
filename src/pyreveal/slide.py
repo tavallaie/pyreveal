@@ -12,11 +12,13 @@ class Slide:
         title: str | None = None,
         background: Background | None = None,
         *,
+        slide_id: str | None = None,
         transition: str | None = None,
         state: str | None = None,
         auto_slide: int | None = None,
         auto_animate: bool = False,
         auto_animate_easing: str | None = None,
+        visibility: str | None = None,
         notes: str | None = None,
         markdown: str | None = None,
         attributes: dict[str, str] | None = None,
@@ -24,11 +26,13 @@ class Slide:
         self.content = content or ""
         self.title = title
         self.background = background
+        self.slide_id = slide_id
         self.transition = transition
         self.state = state
         self.auto_slide = auto_slide
         self.auto_animate = auto_animate
         self.auto_animate_easing = auto_animate_easing
+        self.visibility = visibility
         self.notes = notes
         self.markdown = markdown
         self.attributes = attributes or {}
@@ -49,6 +53,8 @@ class Slide:
 
     def _section_attributes(self) -> str:
         attrs: list[str] = []
+        if self.slide_id:
+            attrs.append(f'id="{escape(self.slide_id)}"')
         if self.transition:
             attrs.append(f'data-transition="{escape(self.transition)}"')
         if self.state:
@@ -61,6 +67,8 @@ class Slide:
             attrs.append(
                 f'data-auto-animate-easing="{escape(self.auto_animate_easing)}"'
             )
+        if self.visibility:
+            attrs.append(f'data-visibility="{escape(self.visibility)}"')
         if self.markdown is not None:
             attrs.append("data-markdown")
         for key, value in self.attributes.items():
