@@ -4,24 +4,29 @@ import shutil
 from base64 import b64encode
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+DOCS_DEMO_DIR = ROOT / "docs" / "demo"
+ASSETS_DIR = DOCS_DEMO_DIR / "assets"
 OUTPUT_DIR = Path(__file__).parent / "presentations"
-ASSETS_DIR = Path(__file__).parent / "assets"
 
 
-def output(filename: str) -> Path:
-    return OUTPUT_DIR / filename
+def output(filename: str, *, output_dir: Path = OUTPUT_DIR) -> Path:
+    return output_dir / filename
 
 
 def copy_assets(target_dir: Path) -> None:
-    """Copy example/assets/ next to the exported deck."""
-    if not ASSETS_DIR.is_dir():
+    """Copy committed demo assets next to the exported deck when needed."""
+    if not ASSETS_DIR.is_dir() or target_dir / "assets" == ASSETS_DIR:
         return
     dest = target_dir / "assets"
     dest.mkdir(parents=True, exist_ok=True)
     for path in ASSETS_DIR.iterdir():
+        if not path.is_file():
+            continue
         target = dest / path.name
-        if path.is_file():
-            shutil.copy2(path, target)
+        if target.exists():
+            continue
+        shutil.copy2(path, target)
 
 
 def svg_image(label: str, *, fill: str = "#3d5a80") -> str:

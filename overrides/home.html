@@ -1,5 +1,5 @@
 {#-
-  PyReveal documentation landing page.
+  PyReveal documentation landing page — embeds the demo presentation.
   https://zensical.org/docs/customization/#custom-templates
 -#}
 {% extends "base.html" %}
@@ -9,55 +9,25 @@
   <link rel="stylesheet" href="{{ 'stylesheets/home.css' | url }}">
 {% endblock %}
 
-{% block extrahead %}
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
-      }
-    }
-  </script>
-{% endblock %}
-
 {% block hero %}
   <section class="mdx-home-hero">
-    <div class="mdx-home-hero__bg" aria-hidden="true">
-      <canvas id="home-hero-canvas" class="mdx-home-hero__canvas"></canvas>
-      <div class="mdx-home-hero__shade" aria-hidden="true"></div>
-    </div>
-    <div class="mdx-teaser">
-      <div class="md-typeset md-grid">
-        <h1>{{ page.meta.hero_title | default(config.site_name) }}</h1>
-        <p>{{ page.meta.hero_tagline | default(config.site_description) }}</p>
-        {% if page.meta.hero_note %}
-          <p>
-            <small><em>{{ page.meta.hero_note }}</em></small>
-          </p>
-        {% endif %}
-        <p class="mdx-teaser__actions">
-          {% set actions = page.meta.hero_actions | default([]) %}
-          {% if actions %}
-            {% for action in actions %}
-              <a
-                class="md-button{% if action.primary %} md-button--primary{% endif %}"
-                href="{{ action.link | url }}"
-              >{{ action.text }}</a>
-            {% endfor %}
-          {% else %}
-            <a class="md-button md-button--primary" href="{{ 'getting-started/quickstart/' | url }}">
-              Get started
-            </a>
-            <a class="md-button" href="{{ 'reference/api/' | url }}">
-              API reference
-            </a>
-          {% endif %}
-        </p>
-      </div>
-    </div>
+    <iframe
+      class="mdx-home-deck"
+      src="{{ 'demo/demo.html' | url }}"
+      title="PyReveal demo presentation"
+      loading="eager"
+      allowfullscreen
+      tabindex="0"
+    ></iframe>
   </section>
 {% endblock %}
 
 {% block content %}{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="{{ 'javascripts/home-deck.js' | url }}"></script>
+{% endblock %}
 
 {% block footer %}
   <footer class="md-footer mdx-home-footer">
@@ -70,9 +40,4 @@
       </div>
     </div>
   </footer>
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  <script type="module" src="{{ 'javascripts/home-hero.mjs' | url }}"></script>
 {% endblock %}

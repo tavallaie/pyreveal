@@ -6,11 +6,12 @@ PyReveal demo — docs homepage title slide + feature tour.
     open http://localhost:8765/demo.html
 """
 
+import argparse
 import bootstrap  # noqa: F401
 
 from pathlib import Path
 
-from _common import OUTPUT_DIR, copy_assets, output
+from _common import ASSETS_DIR, DOCS_DEMO_DIR, OUTPUT_DIR, copy_assets, output
 
 from pyreveal import (
     BackgroundType,
@@ -48,6 +49,15 @@ GIF_BG = "http://i.giphy.com/90F8aUepslB84.gif"
 
 _ANIMATE_EASING = "cubic-bezier(0.770, 0.000, 0.175, 1.000)"
 _THEME_LINK = "document.querySelector('link[href*=\\'theme/\\']')"
+_FOCUS_ON_READY = """
+Reveal.on('ready', () => {
+  Reveal.focus.focus();
+  document.body.setAttribute('tabindex', '-1');
+  document.body.focus({ preventScroll: true });
+  window.frameElement?.focus({ preventScroll: true });
+});
+"""
+
 _THREE_IMPORTMAP = """<script type="importmap">
 {
   "imports": {
@@ -814,6 +824,7 @@ def build() -> Presentation:
         .css(_HOME_HERO_CSS)
         .extra_head(_THREE_IMPORTMAP)
         .script("assets/home-hero.mjs")
+        .inline_js(_FOCUS_ON_READY)
         .plugins(
             Plugin.ZOOM,
             Plugin.NOTES,
@@ -840,15 +851,28 @@ def _write_index(target_html: Path) -> None:
 
 
 if __name__ == "__main__":
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    path = output("demo.html")
-    build().save(path, pdf_hint=True)
-    _write_index(path)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--docs",
+        action="store_true",
+        help="Export to docs/demo/ for the documentation home page",
+    )
+    args = parser.parse_args()
 
-    print()
+    out_dir = DOCS_DEMO_DIR if args.docs else OUTPUT_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ASSETS_DIR.mkdir(parents=True, exist_ok=True)
+
+    path = output("demo.html", output_dir=out_dir)
+    build().save(path, pdf_hint=not args.docs)
+    _write_index(path)
     copy_assets(path.parent)
 
-    print("Serve locally (Three.js mesh + remote assets need HTTP):")
-    print(f"  cd {path.parent.resolve()}")
-    print("  python3 -m http.server 8765")
-    print("  open http://localhost:8765/demo.html")
+    if args.docs:
+        print(f"Docs demo saved to {path}")
+    else:
+        print()
+        print("Serve locally (Three.js mesh + remote assets need HTTP):")
+        print(f"  cd {path.parent.resolve()}")
+        print("  python3 -m http.server 8765")
+        print("  open http://localhost:8765/demo.html")

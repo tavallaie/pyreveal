@@ -1,81 +1,9 @@
-/* PyReveal home: full-viewport hero, mesh reveal backdrop */
+/* PyReveal home: full-viewport embedded demo deck */
 
 body:has(.mdx-home-hero) {
   height: 100dvh;
   overflow: hidden;
   background-color: #08090c;
-}
-
-/* Full-page flowing mesh backdrop */
-.mdx-home-hero__bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  background: linear-gradient(160deg, #0c0d12 0%, #08090c 48%, #090a0f 100%);
-}
-
-.mdx-home-hero__bg::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  opacity: 0;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 38px,
-      rgba(200, 210, 224, 0.07) 39px,
-      transparent 40px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0,
-      transparent 38px,
-      rgba(200, 210, 224, 0.07) 39px,
-      transparent 40px
-    );
-  animation: mdx-mesh-flow 28s linear infinite;
-}
-
-.no-hero-webgl .mdx-home-hero__bg::before {
-  opacity: 1;
-}
-
-@keyframes mdx-mesh-flow {
-  from {
-    transform: translate3d(0, 0, 0) skewY(-2deg);
-  }
-  to {
-    transform: translate3d(-40px, -24px, 0) skewY(-2deg);
-  }
-}
-
-.mdx-home-hero__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Light blur + vignette over the mesh */
-.mdx-home-hero__shade {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  backdrop-filter: blur(5px) saturate(1.05);
-  -webkit-backdrop-filter: blur(5px) saturate(1.05);
-  background:
-    radial-gradient(ellipse 120% 90% at 50% 58%, transparent 42%, rgba(8, 9, 12, 0.12) 100%),
-    linear-gradient(90deg, rgba(8, 9, 12, 0.2) 0%, rgba(8, 9, 12, 0.02) 38%, transparent 62%);
-}
-
-.no-hero-webgl .mdx-home-hero__canvas {
-  opacity: 0;
-  visibility: hidden;
 }
 
 /* Home chrome: always white on dark hero */
@@ -159,76 +87,16 @@ body:has(.mdx-home-hero) .md-container {
   position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
-  align-items: center;
   overflow: hidden;
-  background: transparent;
+  background: #08090c;
 }
 
-.mdx-teaser {
-  position: relative;
-  z-index: 2;
+.mdx-home-deck {
+  display: block;
   width: 100%;
-  padding: 0;
-}
-
-.mdx-teaser h1 {
-  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
-  letter-spacing: -0.04em;
-  line-height: 1.15;
-  margin: 0 0 0.75rem;
-  max-width: 28rem;
-  color: #fff;
-  text-shadow: 0 1px 24px rgba(0, 0, 0, 0.45);
-}
-
-.mdx-teaser p {
-  font-size: clamp(1rem, 2vw, 1.125rem);
-  line-height: 1.55;
-  max-width: 32rem;
-  margin: 0 0 0.75rem;
-  color: #fff;
-  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.4);
-}
-
-.mdx-teaser small {
-  color: rgba(255, 255, 255, 0.82) !important;
-  opacity: 1;
-}
-
-.mdx-teaser a {
-  color: inherit;
-}
-
-.mdx-teaser__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.25rem !important;
-}
-
-.mdx-teaser .md-button {
-  margin: 0;
-  backdrop-filter: blur(6px);
-  background-color: hsla(var(--md-hue), 15%, 90%, 0.14);
-  color: #fff;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.mdx-teaser .md-button:hover,
-.mdx-teaser .md-button:focus {
-  color: #fff;
-}
-
-.mdx-teaser .md-button--primary {
-  background: linear-gradient(35deg, rgba(176, 186, 198, 0.55), rgba(220, 226, 235, 0.35));
-  color: #fff;
-  border: 1px solid rgba(220, 226, 235, 0.25);
-}
-
-.mdx-teaser .md-button--primary:hover,
-.mdx-teaser .md-button--primary:focus {
-  color: #fff;
+  height: 100%;
+  border: 0;
+  background: #08090c;
 }
 
 body:has(.mdx-home-hero) .md-main {
@@ -274,12 +142,3 @@ body:has(.mdx-home-hero) .md-top {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .mdx-home-hero__bg::before {
-    animation: none;
-  }
-
-  .mdx-teaser .md-button {
-    transition: none;
-  }
-}

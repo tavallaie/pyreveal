@@ -26,8 +26,11 @@ Serve the current working tree (single version):
 
 ```bash
 uv sync --group docs
+uv run python scripts/build_docs_demo.py
 uv run zensical serve
 ```
+
+The docs home page embeds `example/demo.py` output. Media assets live in committed `docs/demo/assets/`; the build script only regenerates `demo.html` and `revealjs/`.
 
 Preview all deployed versions after a local mike deploy:
 
