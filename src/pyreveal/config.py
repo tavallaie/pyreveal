@@ -23,6 +23,21 @@ MATH_ENGINES = {
     MathEngine.MATHJAX4.value: "RevealMath.MathJax4",
 }
 
+# reveal.js expects markdown before highlight in script + init order.
+PLUGIN_LOAD_ORDER = [
+    Plugin.ZOOM.value,
+    Plugin.NOTES.value,
+    Plugin.SEARCH.value,
+    Plugin.MARKDOWN.value,
+    Plugin.HIGHLIGHT.value,
+    Plugin.MATH.value,
+]
+
+
+def sort_plugins(plugins: list[str]) -> list[str]:
+    order = {name: index for index, name in enumerate(PLUGIN_LOAD_ORDER)}
+    return sorted(plugins, key=lambda name: order.get(name, len(PLUGIN_LOAD_ORDER)))
+
 
 def build_initialize_options(
     transition: str, options: dict[str, Any] | None = None
@@ -46,7 +61,7 @@ def plugin_script_tags(
     """Return HTML script tags for enabled reveal.js plugins."""
     tags = [
         f'    <script src="revealjs/dist/plugin/{name}.js"></script>'
-        for name in plugins
+        for name in sort_plugins(plugins)
     ]
     for plugin in custom_plugins or []:
         tags.append(f'    <script src="{escape(plugin.script)}"></script>')
@@ -61,7 +76,7 @@ def plugin_initialize_list(
 ) -> str:
     """Return the plugins array for Reveal.initialize()."""
     names: list[str] = []
-    for name in plugins:
+    for name in sort_plugins(plugins):
         if name == Plugin.MATH.value:
             names.append(MATH_ENGINES.get(math_engine, MATH_ENGINES[MathEngine.KATEX.value]))
         else:

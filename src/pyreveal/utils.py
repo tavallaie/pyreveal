@@ -20,6 +20,9 @@ def wrap_in_html_template(
     math_engine: str = "katex",
     extra_css: list[str] | None = None,
     inline_css: str | None = None,
+    extra_head: str | None = None,
+    extra_scripts: list[str] | None = None,
+    inline_js: str | None = None,
 ) -> str:
     """Wrap slides HTML in a Reveal.js 6.x-compatible template."""
     plugins = plugins or []
@@ -30,7 +33,7 @@ def wrap_in_html_template(
         else ""
     )
     highlight_css = (
-        '\n    <link rel="stylesheet" href="revealjs/dist/plugin/highlight/monokai.css">'
+        '\n    <link rel="stylesheet" href="revealjs/dist/plugin/highlight/zenburn.css">'
         if "highlight" in plugins
         else ""
     )
@@ -41,11 +44,26 @@ def wrap_in_html_template(
     inline_style = (
         f"\n    <style>\n{inline_css}\n    </style>" if inline_css else ""
     )
-    plugin_init = (
-        f",\n            plugins: [{plugin_initialize_list(plugins, math_engine=math_engine, custom_plugins=custom_plugins)}]"
+    head_extra = f"\n    {extra_head}" if extra_head else ""
+    script_tags = "".join(
+        f'\n    <script type="module" src="{escape(path)}"></script>'
+        for path in (extra_scripts or [])
+    )
+    inline_script = f"\n    <script>\n{inline_js}\n    </script>" if inline_js else ""
+    plugin_list = (
+        plugin_initialize_list(
+            plugins, math_engine=math_engine, custom_plugins=custom_plugins
+        )
         if plugins or custom_plugins
         else ""
     )
+    if plugin_list:
+        config_js = config_js.rstrip()
+        if config_js.endswith("}"):
+            config_js = (
+                config_js[:-1]
+                + f",\n            plugins: [{plugin_list}]\n        }}"
+            )
     plugin_block = f"\n{plugin_scripts}" if plugin_scripts else ""
 
     return f"""<!DOCTYPE html>
@@ -56,7 +74,7 @@ def wrap_in_html_template(
     <title>{escape(title)}</title>
     <link rel="stylesheet" href="revealjs/dist/reset.css">
     <link rel="stylesheet" href="revealjs/dist/reveal.css">
-    <link rel="stylesheet" href="revealjs/dist/theme/{theme}.css">{highlight_css}{extra_css_links}{inline_style}
+    <link rel="stylesheet" href="revealjs/dist/theme/{theme}.css">{highlight_css}{extra_css_links}{inline_style}{head_extra}
 </head>
 <body>
     <div class="reveal">
@@ -66,8 +84,8 @@ def wrap_in_html_template(
     </div>
     <script src="revealjs/dist/reveal.js"></script>{plugin_block}
     <script>
-        Reveal.initialize({config_js}{plugin_init});
-    </script>
+        Reveal.initialize({config_js});
+    </script>{inline_script}{script_tags}
 </body>
 </html>
 """

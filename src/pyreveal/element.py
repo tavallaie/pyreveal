@@ -236,10 +236,11 @@ class CodeElement(Element):
         data_attrs = ' data-trim data-noescape'
         if self.line_numbers:
             data_attrs += ' data-line-numbers'
+        # data-noescape: reveal.js highlight reads raw source from the DOM.
         code_tag = (
-            f'<code class="{lang_class}"{data_attrs}>{escape(self.code)}</code>'
+            f'<code class="{lang_class}"{data_attrs}>{self.code}</code>'
             if lang_class
-            else f"<code{data_attrs}>{escape(self.code)}</code>"
+            else f"<code{data_attrs}>{self.code}</code>"
         )
         return (
             f"<pre{self._data_id_attr()}{self._style_attr()}>{code_tag}</pre>"
@@ -250,12 +251,12 @@ class MarkdownElement(Element):
     """Inline Markdown block (requires the markdown plugin)."""
 
     def __init__(self, markdown: str, **kwargs):
-        super().__init__(tag="div", content="", attributes={"data-markdown": ""}, **kwargs)
+        super().__init__(tag="div", content="", **kwargs)
         self.markdown = markdown
 
     def generate_html(self) -> str:
         return (
-            f'<section data-markdown>'
-            f"<script type=\"text/template\">\n{self.markdown}\n</script>"
-            f"</section>"
+            '<div data-markdown>'
+            f'<script type="text/template">\n{self.markdown}\n</script>'
+            "</div>"
         )

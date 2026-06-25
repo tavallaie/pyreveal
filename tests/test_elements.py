@@ -48,7 +48,8 @@ def test_code_element_with_language():
 def test_markdown_element():
     md = MarkdownElement("## Hello\n\nWorld")
     html = md.generate_html()
-    assert "data-markdown" in html
+    assert '<div data-markdown>' in html
+    assert "<section" not in html
     assert "## Hello" in html
 
 

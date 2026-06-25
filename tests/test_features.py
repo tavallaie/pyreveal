@@ -17,7 +17,8 @@ def test_enable_plugins_in_html():
     assert "revealjs/dist/plugin/notes.js" in html
     assert "revealjs/dist/plugin/highlight.js" in html
     assert "revealjs/dist/plugin/markdown.js" in html
-    assert "plugin/highlight/monokai.css" in html
+    assert "plugin/highlight/zenburn.css" in html
+    assert "RevealMarkdown, RevealHighlight" in html
     assert "RevealNotes" in html
     assert "RevealHighlight" in html
     assert "RevealMarkdown" in html
