@@ -2,7 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
-example/
+# Generated decks (reveal.js is copied from src/pyreveal/revealjs on save)
+example/presentations/
+presentations/
+docs/demo/revealjs/
+docs/demo/demo.html
+docs/demo/index.html
 # C extensions
 *.so
 # Distribution / packaging

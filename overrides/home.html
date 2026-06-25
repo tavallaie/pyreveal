@@ -1,0 +1,43 @@
+{#-
+  PyReveal documentation landing page — embeds the demo presentation.
+  https://zensical.org/docs/customization/#custom-templates
+-#}
+{% extends "base.html" %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ 'stylesheets/home.css' | url }}">
+{% endblock %}
+
+{% block hero %}
+  <section class="mdx-home-hero">
+    <iframe
+      class="mdx-home-deck"
+      src="{{ 'demo/demo.html' | url }}"
+      title="PyReveal demo presentation"
+      loading="eager"
+      allowfullscreen
+      tabindex="0"
+    ></iframe>
+  </section>
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="{{ 'javascripts/home-deck.js' | url }}"></script>
+{% endblock %}
+
+{% block footer %}
+  <footer class="md-footer mdx-home-footer">
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        {% include "partials/copyright.html" %}
+        {% if config.extra.social %}
+          {% include "partials/social.html" %}
+        {% endif %}
+      </div>
+    </div>
+  </footer>
+{% endblock %}

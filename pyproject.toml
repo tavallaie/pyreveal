@@ -1,16 +1,34 @@
-[tool.poetry]
+[project]
 name = "pyreveal"
-version = "0.2.0"
+version = "1.0.0"
 description = "A Python library to simplify the creation of presentations using Reveal.js."
-authors = ["Ali Tavallaie <a.tavallaie@gmail.com>"]
-license = "MIT"
-readme = "README.rst"
+readme = "readme.md"
+license = { text = "MIT" }
+authors = [{ name = "Ali Tavallaie", email = "a.tavallaie@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = []
 
-[tool.poetry.dependencies]
-python = "^3.10"
+[project.urls]
+Homepage = "https://github.com/tavallaie/pyreveal"
+Documentation = "https://tavallaie.github.io/pyreveal/"
+Repository = "https://github.com/tavallaie/pyreveal"
+Issues = "https://github.com/tavallaie/pyreveal/issues"
 
-[tool.poetry.dev-dependencies]
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+docs = [
+    "zensical>=0.0.46",
+    "mike",
+]
+
+[tool.uv.sources]
+mike = { git = "https://github.com/squidfunk/mike.git" }
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.11.24,<0.12"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
