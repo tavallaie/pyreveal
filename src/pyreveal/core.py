@@ -1,32 +1,44 @@
 import os
 import shutil
-import pkg_resources
+from importlib.resources import as_file, files
+from pathlib import Path
 
+from .background import ImageBackground, VideoBackground
 from .exceptions import (
+    DuplicateSlideTitleError,
+    EmptySlideContentError,
     InvalidThemeError,
     InvalidTransitionError,
-    EmptySlideContentError,
-    DuplicateSlideTitleError,
     SlideGroupNotFoundError,
 )
 from .utils import generate_slides_html, wrap_in_html_template
-from .background import ImageBackground, VideoBackground
 
 
 class PyReveal:
     VALID_THEMES = [
-        "black",
-        "white",
-        "league",
-        "sky",
         "beige",
-        "simple",
-        "serif",
-        "night",
+        "black",
+        "black-contrast",
+        "blood",
+        "dracula",
+        "league",
         "moon",
+        "night",
+        "serif",
+        "simple",
+        "sky",
         "solarized",
+        "white",
+        "white-contrast",
     ]
-    VALID_TRANSITIONS = ["slide", "fade", "convex", "concave", "zoom"]
+    VALID_TRANSITIONS = [
+        "none",
+        "slide",
+        "fade",
+        "convex",
+        "concave",
+        "zoom",
+    ]
 
     def __init__(
         self, title="Untitled Presentation", theme="black", transition="slide"
@@ -40,11 +52,9 @@ class PyReveal:
         if not content.strip():
             raise EmptySlideContentError("Slide content cannot be empty.")
 
-        # Check for duplicate slide titles
         if title and any(slide["title"] == title for slide in self.slides):
             raise DuplicateSlideTitleError(title)
 
-        # If the slide is part of a group, validate the group
         if group and not any(slide["title"] == group for slide in self.slides):
             raise SlideGroupNotFoundError(group)
 
@@ -76,46 +86,34 @@ class PyReveal:
             self.title, self.theme, self.transition, slides_html
         )
 
-    def save_to_file(self, filename="presentation.html"):
-        # Ensure the presentations directory exists
-        presentations_dir = "presentations"
-        if not os.path.exists(presentations_dir):
-            os.makedirs(presentations_dir)
+    def save_to_file(self, filename="presentation.html", output_dir="presentations"):
+        presentations_dir = Path(output_dir)
+        presentations_dir.mkdir(parents=True, exist_ok=True)
 
-        # Ensure the assets directory exists inside presentations
-        assets_dir = os.path.join(presentations_dir, "assets")
-        if not os.path.exists(assets_dir):
-            os.makedirs(assets_dir)
-
-        # Copy assets (background images, videos, etc.) to the assets directory and update slide references
+        assets_dir = presentations_dir / "assets"
+        assets_dir.mkdir(parents=True, exist_ok=True)
 
         for slide in self.slides:
             background = slide.get("background")
             if background and isinstance(background, ImageBackground):
-                # Copy the image and update the slide's image URL
                 new_image_path = shutil.copy(background.image_url, assets_dir)
                 slide["background"].image_url = os.path.relpath(
                     new_image_path, presentations_dir
                 )
             elif background and isinstance(background, VideoBackground):
-                # Copy the video and update the slide's video URL
                 new_video_path = shutil.copy(background.video_url, assets_dir)
                 slide["background"].video_url = os.path.relpath(
                     new_video_path, presentations_dir
                 )
 
-        # Locate the Reveal.js assets bundled with your package
-        revealjs_source = pkg_resources.resource_filename("pyreveal", "revealjs")
+        revealjs_ref = files("pyreveal") / "revealjs"
+        revealjs_dest = presentations_dir / "revealjs"
 
-        # Construct the full path to save the file
-        full_path = os.path.join(presentations_dir, filename)
+        with as_file(revealjs_ref) as revealjs_source:
+            if not revealjs_dest.exists():
+                shutil.copytree(revealjs_source, revealjs_dest)
 
-        # Copy the Reveal.js assets to the presentations directory
-        revealjs_dest = os.path.join(presentations_dir, "revealjs")
-        if not os.path.exists(revealjs_dest):
-            shutil.copytree(revealjs_source, revealjs_dest)
-
-        with open(full_path, "w") as f:
-            f.write(self.generate_html())
+        full_path = presentations_dir / filename
+        full_path.write_text(self.generate_html(), encoding="utf-8")
 
         print(f"Presentation saved to: {full_path}")

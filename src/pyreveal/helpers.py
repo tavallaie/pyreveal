@@ -9,16 +9,20 @@ from .exceptions import (
 
 def validate_theme(theme):
     valid_themes = [
-        "black",
-        "white",
-        "league",
-        "sky",
         "beige",
-        "simple",
-        "serif",
-        "night",
+        "black",
+        "black-contrast",
+        "blood",
+        "dracula",
+        "league",
         "moon",
+        "night",
+        "serif",
+        "simple",
+        "sky",
         "solarized",
+        "white",
+        "white-contrast",
     ]
     if theme not in valid_themes:
         raise InvalidThemeError(
@@ -27,7 +31,7 @@ def validate_theme(theme):
 
 
 def validate_transition(transition):
-    valid_transitions = ["slide", "fade", "convex", "concave", "zoom"]
+    valid_transitions = ["none", "slide", "fade", "convex", "concave", "zoom"]
     if transition not in valid_transitions:
         raise InvalidTransitionError(
             f"'{transition}' is not a valid transition. Valid transitions are: {', '.join(valid_transitions)}"
