@@ -7,6 +7,7 @@ repo_url = "https://github.com/tavallaie/pyreveal"
 repo_name = "tavallaie/pyreveal"
 edit_uri = "edit/dev/docs/"
 copyright = "Copyright &copy; 2026 Ali Tavallaie"
+extra_css = ["stylesheets/header.css"]
 
 nav = [
     { "Home" = "index.md" },
@@ -53,15 +54,11 @@ features = [
 
 [[project.theme.palette]]
 scheme = "default"
-primary = "amber"
-accent = "amber"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
-primary = "amber"
-accent = "amber"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 
