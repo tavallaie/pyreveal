@@ -23,18 +23,16 @@ uv build
 
 ## Documentation
 
-Generate embedded PyReveal demos, then preview:
+Preview docs locally:
 
 ```bash
 uv sync --group docs
-uv run python scripts/build_docs_demo.py
 uv run zensical serve
 ```
 
 Build a static site:
 
 ```bash
-uv run python scripts/build_docs_demo.py
 uv run zensical build --clean
 ```
 
