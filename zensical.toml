@@ -7,7 +7,6 @@ repo_url = "https://github.com/tavallaie/pyreveal"
 repo_name = "tavallaie/pyreveal"
 edit_uri = "edit/dev/docs/"
 copyright = "Copyright &copy; 2026 Ali Tavallaie"
-extra_css = ["stylesheets/header.css"]
 
 nav = [
     { "Home" = "index.md" },
@@ -28,6 +27,10 @@ nav = [
 ]
 
 [project.theme]
+# classic: primary color applies to header and sidebar
+# https://zensical.org/docs/setup/basics/#theme-variant
+# https://zensical.org/docs/setup/colors/#primary-color
+variant = "classic"
 custom_dir = "overrides"
 language = "en"
 features = [
@@ -46,19 +49,23 @@ features = [
     "navigation.instant.prefetch",
     "navigation.path",
     "navigation.sections",
-    "navigation.tabs",
     "navigation.top",
     "navigation.tracking",
     "search.highlight",
 ]
 
+# https://zensical.org/docs/setup/colors/#color-palette-toggle
 [[project.theme.palette]]
 scheme = "default"
+primary = "amber"
+accent = "amber"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
+primary = "amber"
+accent = "amber"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 
