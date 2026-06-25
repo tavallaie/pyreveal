@@ -1,0 +1,144 @@
+/* PyReveal home: full-viewport embedded demo deck */
+
+body:has(.mdx-home-hero) {
+  height: 100dvh;
+  overflow: hidden;
+  background-color: #08090c;
+}
+
+/* Home chrome: always white on dark hero */
+body:has(.mdx-home-hero) .md-header {
+  position: relative;
+  z-index: 2;
+  color: #fff !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body:has(.mdx-home-hero) .md-header.md-header--lifted,
+body:has(.mdx-home-hero) .md-header[data-md-state="shadow"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body:has(.mdx-home-hero) .md-header a,
+body:has(.mdx-home-hero) .md-header__inner,
+body:has(.mdx-home-hero) .md-header__button,
+body:has(.mdx-home-hero) .md-header__topic,
+body:has(.mdx-home-hero) .md-header__title,
+body:has(.mdx-home-hero) .md-header__ellipsis,
+body:has(.mdx-home-hero) .md-source,
+body:has(.mdx-home-hero) .md-source__repository,
+body:has(.mdx-home-hero) .md-tabs,
+body:has(.mdx-home-hero) .md-tabs__link,
+body:has(.mdx-home-hero) .md-tabs__item,
+body:has(.mdx-home-hero) .md-footer-meta,
+body:has(.mdx-home-hero) .md-footer-meta a,
+body:has(.mdx-home-hero) .md-social__link {
+  color: #fff !important;
+}
+
+body:has(.mdx-home-hero) .md-header svg,
+body:has(.mdx-home-hero) .md-tabs svg,
+body:has(.mdx-home-hero) .md-footer-meta svg,
+body:has(.mdx-home-hero) .md-social svg {
+  color: #fff !important;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+body:has(.mdx-home-hero) .md-tabs {
+  position: relative;
+  z-index: 2;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: inset 0 -0.05rem 0 hsla(0, 0%, 100%, 0.12);
+}
+
+body:has(.mdx-home-hero) .md-tabs__item--active {
+  border-bottom: 0.05rem solid #fff !important;
+}
+
+body:has(.mdx-home-hero) .md-tabs__item--active .md-tabs__link {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+body:has(.mdx-home-hero) .md-header__option[data-md-component="palette"],
+body:has(.mdx-home-hero) label.md-header__button[for="__search"],
+body:has(.mdx-home-hero) .md-search {
+  display: none !important;
+}
+
+body:has(.mdx-home-hero) .md-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - 4.8rem);
+  overflow: hidden;
+  background: transparent;
+}
+
+.mdx-home-hero {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #08090c;
+}
+
+.mdx-home-deck {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #08090c;
+}
+
+body:has(.mdx-home-hero) .md-main {
+  display: none;
+}
+
+body:has(.mdx-home-hero) .md-footer__inner {
+  display: none;
+}
+
+body:has(.mdx-home-hero) .md-footer {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body:has(.mdx-home-hero) .md-footer-meta,
+body:has(.mdx-home-hero) .md-footer-meta__inner,
+body:has(.mdx-home-hero) .md-footer-meta.md-typeset,
+body:has(.mdx-home-hero) .md-copyright,
+body:has(.mdx-home-hero) .md-copyright__highlight,
+body:has(.mdx-home-hero) .md-copyright a {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+body:has(.mdx-home-hero) .md-footer-meta a:hover,
+body:has(.mdx-home-hero) .md-copyright a:hover {
+  color: #fff !important;
+}
+
+body:has(.mdx-home-hero) .md-top {
+  display: none;
+}
+
+@media (max-width: 76.25em) {
+  body:has(.mdx-home-hero) .md-container {
+    height: calc(100dvh - 3.6rem);
+  }
+}
+
