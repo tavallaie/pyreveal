@@ -1,8 +1,11 @@
 import shutil
+import warnings
 from importlib.resources import as_file, files
 from pathlib import Path
+from typing import Any
 
-from .background import Background, ImageBackground, VideoBackground
+from .background import Background
+from .config import build_initialize_options
 from .exceptions import (
     DuplicateSlideTitleError,
     EmptySlideContentError,
@@ -45,22 +48,41 @@ class PyReveal:
         self, title="Untitled Presentation", theme="black", transition="slide"
     ):
         self.title = title
-        self.slides = []
+        self.slides: list[Slide | dict[str, Any]] = []
         self.background = None
+        self._config: dict[str, Any] = {}
         self.set_theme(theme)
         self.set_transition(transition)
 
-    def add_slide(
-        self, slide=None, content=None, title=None, group=None, background=None
-    ):
-        if slide is not None:
-            if not isinstance(slide, Slide):
-                raise TypeError("Expected instance of Slide.")
-            self.slides.append(slide)
-            return
+    def configure(self, **options: Any) -> "PyReveal":
+        """Set Reveal.js ``Reveal.initialize()`` options.
 
-        if content is None:
-            raise TypeError("Either a Slide instance or content string is required.")
+        See https://revealjs.com/config/ for available keys. Theme is set via
+        ``set_theme()`` (CSS); ``transition`` can be set here or via
+        ``set_transition()``. Options passed here take precedence at render time.
+        """
+        self._config.update(options)
+        return self
+
+    def add_slide(self, slide: Slide) -> None:
+        """Add a :class:`Slide` to the presentation."""
+        if not isinstance(slide, Slide):
+            raise TypeError("Expected instance of Slide.")
+        self.slides.append(slide)
+
+    def add_content_slide(
+        self, content, title=None, group=None, background=None
+    ) -> None:
+        """Add a slide from raw HTML content.
+
+        .. deprecated::
+            Use :class:`Slide` objects with :meth:`add_slide` instead.
+        """
+        warnings.warn(
+            "add_content_slide() is deprecated; build a Slide and call add_slide() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         if not content.strip():
             raise EmptySlideContentError()
@@ -109,7 +131,8 @@ class PyReveal:
             raise TypeError("Expected instance of Background class.")
         self.background = background
 
-    def add_group(self, slides):
+    def add_group(self, slides: list[Slide]) -> None:
+        """Add a vertical stack of slides."""
         if not all(isinstance(slide, Slide) for slide in slides):
             raise TypeError("All items in the group must be instances of Slide.")
         self.slides.append({"type": "group", "slides": slides})
@@ -125,6 +148,13 @@ class PyReveal:
                 groups.extend(item["slides"])
         return groups
 
+    def _render_nested_slides(self, parent: Slide, children: list[Slide]) -> str:
+        background_html = parent.background.generate_html() if parent.background else ""
+        children_html = "\n".join(child.render() for child in children)
+        return (
+            f"<section{background_html}>\n{parent.render()}\n{children_html}\n</section>"
+        )
+
     def _render_slide_item(self, item):
         if isinstance(item, dict) and item.get("type") == "group":
             group_html = "\n".join(slide.render() for slide in item["slides"])
@@ -133,13 +163,12 @@ class PyReveal:
         if not isinstance(item, Slide):
             raise TypeError(f"Unexpected slide item: {item!r}")
 
-        vertical_slides = self._groups_for_parent(item.title)
-        if vertical_slides:
-            vertical_html = "\n".join(slide.render() for slide in vertical_slides)
-            background_html = item.background.generate_html() if item.background else ""
-            return (
-                f"<section{background_html}>\n{item.render()}\n{vertical_html}\n</section>"
-            )
+        legacy_vertical = self._groups_for_parent(item.title)
+        if legacy_vertical:
+            return self._render_nested_slides(item, legacy_vertical)
+
+        if item.vertical_slides:
+            return self._render_nested_slides(item, item.vertical_slides)
 
         return item.render()
 
@@ -162,12 +191,13 @@ class PyReveal:
             if isinstance(item, Slide) and item.title in grouped_parents:
                 rendered.append(self._render_slide_item(item))
             elif isinstance(item, Slide):
-                rendered.append(item.render())
+                rendered.append(self._render_slide_item(item))
             else:
                 rendered.append(self._render_slide_item(item))
 
+        initialize_options = build_initialize_options(self.transition, self._config)
         return wrap_in_html_template(
-            self.title, self.theme, self.transition, "\n".join(rendered)
+            self.title, self.theme, "\n".join(rendered), initialize_options
         )
 
     def _iter_slides(self):
@@ -176,7 +206,8 @@ class PyReveal:
                 for slide in item["slides"]:
                     yield slide
             elif isinstance(item, Slide):
-                yield item
+                yield slide
+                yield from item.vertical_slides
 
     def save_to_file(self, filename="presentation.html", output_dir="presentations"):
         presentations_dir = Path(output_dir)

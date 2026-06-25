@@ -1,5 +1,9 @@
-def wrap_in_html_template(title, theme, transition, slides_html):
+from .config import serialize_initialize_options
+
+
+def wrap_in_html_template(title, theme, slides_html, initialize_options):
     """Wrap slides HTML in a Reveal.js 6.x-compatible template."""
+    config_js = serialize_initialize_options(initialize_options)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,9 +22,7 @@ def wrap_in_html_template(title, theme, transition, slides_html):
     </div>
     <script src="revealjs/dist/reveal.js"></script>
     <script>
-        Reveal.initialize({{
-            transition: '{transition}'
-        }});
+        Reveal.initialize({config_js});
     </script>
 </body>
 </html>
