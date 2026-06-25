@@ -27,10 +27,8 @@ nav = [
 ]
 
 [project.theme]
-# classic: primary color applies to header and sidebar
+# modern: default Zensical look (like zensical.org)
 # https://zensical.org/docs/setup/basics/#theme-variant
-# https://zensical.org/docs/setup/colors/#primary-color
-variant = "classic"
 custom_dir = "overrides"
 language = "en"
 features = [
@@ -49,25 +47,70 @@ features = [
     "navigation.instant.prefetch",
     "navigation.path",
     "navigation.sections",
+    "navigation.tabs",
+    "navigation.tabs.sticky",
     "navigation.top",
     "navigation.tracking",
     "search.highlight",
 ]
 
+# Theme chooser: cycle palettes via the header toggle
 # https://zensical.org/docs/setup/colors/#color-palette-toggle
 [[project.theme.palette]]
 scheme = "default"
 primary = "teal"
 accent = "teal"
-toggle.icon = "lucide/sun"
-toggle.name = "Switch to dark mode"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to teal dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
 primary = "teal"
 accent = "teal"
+toggle.icon = "lucide/palette"
+toggle.name = "Switch to indigo light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "indigo"
+accent = "indigo"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to light mode"
+toggle.name = "Switch to indigo dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "indigo"
+accent = "indigo"
+toggle.icon = "lucide/palette"
+toggle.name = "Switch to amber light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "amber"
+accent = "amber"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to amber dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "amber"
+accent = "amber"
+toggle.icon = "lucide/palette"
+toggle.name = "Switch to purple light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "purple"
+accent = "purple"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to purple dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "purple"
+accent = "purple"
+toggle.icon = "lucide/palette"
+toggle.name = "Switch to teal light mode"
 
 [project.extra.version]
 provider = "mike"
