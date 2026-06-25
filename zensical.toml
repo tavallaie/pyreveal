@@ -57,15 +57,15 @@ features = [
 # https://zensical.org/docs/setup/colors/#color-palette-toggle
 [[project.theme.palette]]
 scheme = "default"
-primary = "amber"
-accent = "amber"
+primary = "teal"
+accent = "teal"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
-primary = "amber"
-accent = "amber"
+primary = "teal"
+accent = "teal"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 
