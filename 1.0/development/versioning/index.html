@@ -1523,6 +1523,8 @@
 <h2 id="ci-deployment">CI deployment<a class="headerlink" href="#ci-deployment" title="Permanent link">&para;</a></h2>
 <p>Pushes to <code>main</code> and <code>dev</code> run <code>.github/workflows/docs.yml</code>, which:</p>
 <ol>
+<li>Checks out <code>src/pyreveal/revealjs</code> (git submodule)</li>
+<li>Builds <code>docs/demo/</code> for the home-page iframe</li>
 <li>Reads the package version from <code>pyproject.toml</code></li>
 <li>Deploys docs with <code>mike deploy</code></li>
 <li>Updates the <code>latest</code> alias and default redirect</li>
