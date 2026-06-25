@@ -9,7 +9,7 @@ PyReveal is a Python library for building [Reveal.js](https://revealjs.com/) pre
 ## Key features
 
 - **Slide API** — compose decks with `Slide`, `Element`, and `Style`
-- **Reveal.js 6** — themes, transitions, scroll view, and more via `configure()`
+- **Reveal.js 6** — themes, transitions, plugins, fragments, and `configure()`
 - **Portable output** — `save_to_file()` copies reveal.js assets into the output folder
 
 ## Quick start
@@ -32,7 +32,10 @@ presentation.save_to_file("deck.html")
 - [Installation](getting-started/installation.md)
 - [Quick start](getting-started/quickstart.md)
 - [Slides](user-guide/slides.md)
+- [Fragments](user-guide/fragments.md)
+- [Plugins](user-guide/plugins.md)
 - [Configuration](user-guide/configuration.md)
+- [API reference](reference/api.md)
 
 ## Versioning
 

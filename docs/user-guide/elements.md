@@ -33,6 +33,26 @@ slide = Slide(content="<h2>Demo</h2>")
 slide.add_element(VideoElement(video_url="assets/demo.mp4"))
 ```
 
+## Fragments
+
+```python
+from pyreveal import Fragment
+
+slide.add_element(Fragment("Step one", effect="grow"))
+```
+
+See [Fragments](fragments.md) for effects and auto-animate.
+
+## Code blocks
+
+```python
+from pyreveal import CodeElement
+
+slide.add_element(CodeElement("print(1)", language="python", line_numbers=True))
+```
+
+Requires `presentation.enable_plugins("highlight")`.
+
 ## Generic elements
 
-`Element` supports arbitrary tags, attributes, nested children, and inline CSS via `Style`.
+`Element` supports arbitrary tags, attributes, nested children, `data_id` for auto-animate, and inline CSS via `Style`.

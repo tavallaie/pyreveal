@@ -18,7 +18,12 @@ nav = [
         "user-guide/slides.md",
         "user-guide/elements.md",
         "user-guide/backgrounds.md",
+        "user-guide/fragments.md",
+        "user-guide/plugins.md",
         "user-guide/configuration.md",
+    ]},
+    { "Reference" = [
+        "reference/api.md",
     ]},
     { "Development" = [
         "development/contributing.md",

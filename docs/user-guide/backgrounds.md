@@ -39,6 +39,33 @@ slide = Slide(
 )
 ```
 
+## Iframe
+
+```python
+from pyreveal import IframeBackground, Slide
+
+slide = Slide(
+    content="<h2>Live page</h2>",
+    background=IframeBackground("https://example.com"),
+)
+```
+
+## Shared options
+
+All background types accept optional `opacity`, `position`, `repeat`, `transition`, and `parallax` keyword arguments.
+
+```python
+ImageBackground("bg.jpg", size="cover", opacity=0.6, position="center")
+```
+
+## Presentation default
+
+Apply a background to every slide that does not set its own:
+
+```python
+presentation.set_background(ColorBackground("#2d3436"))
+```
+
 ## Factory helper
 
 ```python
