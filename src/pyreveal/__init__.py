@@ -10,9 +10,18 @@ from .background import (
     VideoBackground,
 )
 from .core import PyReveal
+from .element import Element, ImageElement, VideoElement
+from .slide import Slide
+from .style import CSS, Style
 
 __all__ = [
     "PyReveal",
+    "Slide",
+    "Element",
+    "ImageElement",
+    "VideoElement",
+    "Style",
+    "CSS",
     "Background",
     "BackgroundFactory",
     "ColorBackground",
