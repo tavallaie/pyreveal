@@ -1,9 +1,7 @@
-import warnings
-
 import pytest
 
 from pyreveal import PyReveal, Slide
-from pyreveal.exceptions import EmptySlideContentError, InvalidThemeError
+from pyreveal.exceptions import InvalidThemeError
 
 
 def test_generate_html_includes_title_and_slides():
@@ -35,14 +33,6 @@ def test_configure_overrides_transition():
 
     html = presentation.generate_html()
     assert '"transition": "zoom"' in html
-
-
-def test_empty_content_slide_raises():
-    presentation = PyReveal()
-    with pytest.raises(EmptySlideContentError):
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", DeprecationWarning)
-            presentation.add_content_slide("   ")
 
 
 def test_invalid_theme_raises():
@@ -83,9 +73,3 @@ def test_add_group():
     html = presentation.generate_html()
     assert "<h2>Stack</h2>" in html
     assert "<p>One</p>" in html
-
-
-def test_add_content_slide_emits_deprecation_warning():
-    presentation = PyReveal()
-    with pytest.warns(DeprecationWarning, match="add_content_slide"):
-        presentation.add_content_slide("<p>legacy</p>")

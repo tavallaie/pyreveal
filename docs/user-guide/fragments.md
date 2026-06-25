@@ -24,21 +24,40 @@ presentation.add_slide(slide)
 
 ## Auto-animate
 
-Matching `data-id` values animate between consecutive slides:
+Use `AutoAnimate` to assign matching `data-id` values across consecutive slides:
 
 ```python
-slide_a = Slide(content="<h2 data-id=\"title\">Hello</h2>", auto_animate=True)
-slide_b = Slide(
-    content="<h2 data-id=\"title\">Hello World</h2>",
-    auto_animate=True,
-    auto_animate_easing="ease-in-out",
+from pyreveal import AutoAnimate, Element, PyReveal
+
+anim = AutoAnimate(easing="ease-in-out")
+presentation.add_slide(
+    anim.slide(matches={"title": Element(tag="h2", content="Hello")})
+)
+presentation.add_slide(
+    anim.slide(matches={"title": Element(tag="h2", content="Hello World")})
 )
 ```
 
-Set `data_id` on `Element` instances for finer control:
+### Sequence helper
+
+Build a full animation chain in one call:
 
 ```python
-from pyreveal import Element
+presentation.add_auto_animate_sequence(
+    [
+        {"title": Element(tag="h2", content="Hello")},
+        {"title": Element(tag="h2", content="Hello World")},
+        {"title": "<h2>Goodbye</h2>", "badge": Element(tag="span", content="New")},
+    ],
+    easing="ease-in-out",
+)
+```
 
-slide.add_element(Element(tag="h2", content="Title", data_id="title"))
+String values in a frame get `data-id` injected automatically (`AutoAnimate.html`).
+Use the `_content` key for extra HTML that is not matched across slides.
+
+### Manual matching
+
+```python
+AutoAnimate.match("title", Element(tag="h2", content="Title"))
 ```

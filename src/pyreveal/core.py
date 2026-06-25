@@ -1,18 +1,13 @@
 import shutil
-import warnings
 from importlib.resources import as_file, files
 from pathlib import Path
 from typing import Any
 
+from .auto_animate import AutoAnimate
 from .background import Background
 from .config import VALID_PLUGINS, build_initialize_options
-from .exceptions import (
-    DuplicateSlideTitleError,
-    EmptySlideContentError,
-    InvalidThemeError,
-    InvalidTransitionError,
-    SlideGroupNotFoundError,
-)
+from .element import Element
+from .exceptions import InvalidThemeError, InvalidTransitionError
 from .helpers import copy_assets_for_slide, copy_element_assets
 from .slide import Slide
 from .utils import wrap_in_html_template
@@ -87,51 +82,21 @@ class PyReveal:
             raise TypeError("Expected instance of Slide.")
         self.slides.append(slide)
 
-    def add_content_slide(
-        self, content, title=None, group=None, background=None
-    ) -> None:
-        """Add a slide from raw HTML content.
+    def add_auto_animate_sequence(
+        self,
+        frames: list[dict[str, Element | str]],
+        *,
+        easing: str | None = None,
+        content_key: str = "_content",
+    ) -> "PyReveal":
+        """Add consecutive auto-animate slides with auto-matched ``data-id`` keys.
 
-        .. deprecated::
-            Use :class:`Slide` objects with :meth:`add_slide` instead.
+        See :class:`~pyreveal.auto_animate.AutoAnimate` for frame format.
         """
-        warnings.warn(
-            "add_content_slide() is deprecated; build a Slide and call add_slide() instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-        if not content.strip():
-            raise EmptySlideContentError()
-
-        new_slide = Slide(content=content, title=title, background=background)
-
-        if group:
-            if not any(
-                isinstance(item, Slide) and item.title == group for item in self.slides
-            ):
-                raise SlideGroupNotFoundError(group)
-
-            for item in self.slides:
-                if (
-                    isinstance(item, dict)
-                    and item.get("type") == "group"
-                    and item.get("parent_title") == group
-                ):
-                    item["slides"].append(new_slide)
-                    return
-
-            self.slides.append(
-                {"type": "group", "parent_title": group, "slides": [new_slide]}
-            )
-            return
-
-        if title and any(
-            isinstance(item, Slide) and item.title == title for item in self.slides
-        ):
-            raise DuplicateSlideTitleError(title)
-
-        self.slides.append(new_slide)
+        helper = AutoAnimate(easing=easing)
+        for slide in helper.sequence(frames, content_key=content_key):
+            self.add_slide(slide)
+        return self
 
     def set_theme(self, theme):
         if theme not in self.VALID_THEMES:
@@ -154,17 +119,6 @@ class PyReveal:
         if not all(isinstance(slide, Slide) for slide in slides):
             raise TypeError("All items in the group must be instances of Slide.")
         self.slides.append({"type": "group", "slides": slides})
-
-    def _groups_for_parent(self, parent_title):
-        groups = []
-        for item in self.slides:
-            if (
-                isinstance(item, dict)
-                and item.get("type") == "group"
-                and item.get("parent_title") == parent_title
-            ):
-                groups.extend(item["slides"])
-        return groups
 
     def _render_nested_slides(self, parent: Slide, children: list[Slide]) -> str:
         outer_bg = parent.background or self.background
@@ -189,37 +143,15 @@ class PyReveal:
         if not isinstance(item, Slide):
             raise TypeError(f"Unexpected slide item: {item!r}")
 
-        legacy_vertical = self._groups_for_parent(item.title)
-        if legacy_vertical:
-            return self._render_nested_slides(item, legacy_vertical)
-
         if item.vertical_slides:
             return self._render_nested_slides(item, item.vertical_slides)
 
         return item.render(default_background=self.background)
 
     def generate_html(self) -> str:
-        rendered = []
-        grouped_parents = {
-            item.get("parent_title")
-            for item in self.slides
-            if isinstance(item, dict) and item.get("type") == "group"
-        }
-
-        for item in self.slides:
-            if (
-                isinstance(item, dict)
-                and item.get("type") == "group"
-                and item.get("parent_title")
-            ):
-                continue
-
-            if isinstance(item, Slide) and item.title in grouped_parents:
-                rendered.append(self._render_slide_item(item))
-            elif isinstance(item, Slide):
-                rendered.append(self._render_slide_item(item))
-            else:
-                rendered.append(self._render_slide_item(item))
+        rendered = [
+            self._render_slide_item(item) for item in self.slides
+        ]
 
         initialize_options = build_initialize_options(self.transition, self._config)
         return wrap_in_html_template(

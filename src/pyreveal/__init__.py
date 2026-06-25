@@ -1,7 +1,8 @@
 """PyReveal — programmatic Reveal.js presentation generation."""
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
+from .auto_animate import AutoAnimate
 from .background import (
     Background,
     BackgroundFactory,
@@ -24,6 +25,7 @@ from .slide import Slide
 from .style import CSS, Style
 
 __all__ = [
+    "AutoAnimate",
     "PyReveal",
     "Slide",
     "Element",

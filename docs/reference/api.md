@@ -10,6 +10,7 @@ icon: lucide/book-open
 | ------ | ----------- |
 | `PyReveal(title, theme, transition)` | Create a presentation |
 | `add_slide(slide)` | Add a `Slide` |
+| `add_auto_animate_sequence(frames, easing=...)` | Add matched auto-animate slides |
 | `add_group(slides)` | Add a vertical stack |
 | `configure(**options)` | Pass options to `Reveal.initialize()` |
 | `enable_plugins(*names)` | Enable reveal.js plugins |
@@ -57,3 +58,13 @@ icon: lucide/book-open
 All backgrounds support optional `opacity`, `position`, `repeat`, `transition`, and `parallax`.
 
 Use `BackgroundFactory.create_background(type, value, **kwargs)` as a shortcut.
+
+## AutoAnimate
+
+| Method | Description |
+| ------ | ----------- |
+| `AutoAnimate(easing=...)` | Helper for building matched slides |
+| `match(key, element)` | Set `data-id` on an element |
+| `html(key, markup)` | Inject `data-id` into an HTML string |
+| `slide(matches=..., content=..., notes=...)` | Build one auto-animate slide |
+| `sequence(frames)` | Build a list of matched slides from keyed dicts |

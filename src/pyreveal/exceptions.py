@@ -25,27 +25,6 @@ class InvalidTransitionError(PyRevealException):
         )
 
 
-class EmptySlideContentError(PyRevealException):
-    """Raised when a slide with empty content is added."""
-
-    def __init__(self):
-        super().__init__("Slide content cannot be empty.")
-
-
-class DuplicateSlideTitleError(PyRevealException):
-    """Raised when a slide with a duplicate title is added."""
-
-    def __init__(self, title):
-        super().__init__(f"A slide with the title '{title}' already exists.")
-
-
-class SlideGroupNotFoundError(PyRevealException):
-    """Raised when a slide references a group that doesn't exist."""
-
-    def __init__(self, group):
-        super().__init__(f"No slide with the title '{group}' found for grouping.")
-
-
 class InvalidBackgroundTypeError(PyRevealException):
     """Raised when an invalid background type is provided."""
 
@@ -65,6 +44,3 @@ class InvalidCSSPropertyError(PyRevealException):
 
     def __init__(self, property_name, value):
         super().__init__(f"Invalid value '{value}' for CSS property '{property_name}'.")
-
-
-# You can continue to add more specific exceptions as needed.

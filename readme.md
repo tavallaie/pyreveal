@@ -87,16 +87,18 @@ presentation.configure(
 
 Theme is selected with `set_theme()` (CSS). Transition defaults come from `set_transition()` but can be overridden in `configure(transition="fade")`.
 
-## Deprecated API
-
-String-based `add_content_slide(content=...)` still works but emits a `DeprecationWarning`. Prefer `Slide` objects:
+## Auto-animate
 
 ```python
-# deprecated
-presentation.add_content_slide("<p>Hello</p>")
+from pyreveal import AutoAnimate, Element
 
-# preferred
-presentation.add_slide(Slide(content="<p>Hello</p>"))
+anim = AutoAnimate()
+presentation.add_auto_animate_sequence(
+    [
+        {"title": Element(tag="h2", content="Hello")},
+        {"title": Element(tag="h2", content="Hello World")},
+    ]
+)
 ```
 
 ## Documentation

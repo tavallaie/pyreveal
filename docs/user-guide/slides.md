@@ -38,14 +38,3 @@ presentation.add_group([
 ])
 ```
 
-## Deprecated string API
-
-`add_content_slide(content=...)` still works but emits a `DeprecationWarning`. Migrate to `Slide` objects:
-
-```python
-# deprecated
-presentation.add_content_slide("<p>Hello</p>")
-
-# preferred
-presentation.add_slide(Slide(content="<p>Hello</p>"))
-```

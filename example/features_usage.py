@@ -3,6 +3,7 @@
 from pyreveal import (
     CodeElement,
     ColorBackground,
+    Element,
     Fragment,
     ImageBackground,
     PyReveal,
@@ -34,6 +35,14 @@ code_slide.add_element(
     )
 )
 presentation.add_slide(code_slide)
+
+presentation.add_auto_animate_sequence(
+    [
+        {"title": Element(tag="h2", content="Before")},
+        {"title": Element(tag="h2", content="After")},
+    ],
+    easing="ease-in-out",
+)
 
 presentation.add_slide(
     Slide(
