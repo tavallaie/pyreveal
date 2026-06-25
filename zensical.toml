@@ -16,6 +16,7 @@ nav = [
     ]},
     { "User guide" = [
         "user-guide/slides.md",
+        "user-guide/choices.md",
         "user-guide/elements.md",
         "user-guide/backgrounds.md",
         "user-guide/fragments.md",
@@ -23,6 +24,7 @@ nav = [
         "user-guide/math.md",
         "user-guide/plugins.md",
         "user-guide/configuration.md",
+        "user-guide/reveal-features.md",
     ]},
     { "Reference" = [
         "reference/api.md",

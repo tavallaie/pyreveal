@@ -4,36 +4,92 @@ icon: lucide/sliders-horizontal
 
 # Reveal.js configuration
 
-Use `configure()` to pass options to `Reveal.initialize()` in the generated HTML. See the [reveal.js config reference](https://revealjs.com/config/) for all keys.
+Use `configure()` to pass any option to `Reveal.initialize()`. See the [reveal.js config reference](https://revealjs.com/config/) for all keys.
+
+PyReveal also provides typed helpers for common options. See [Reveal.js feature support](reveal-features.md).
+
+## Quick setup
 
 ```python
-presentation = PyReveal(theme="white", transition="slide")
-presentation.configure(
-    hash=True,
-    progress=True,
-    slideNumber="h.v",
-    controls=True,
-    view="scroll",
+from pyreveal import Presentation, Slide, SlideNumber, Theme, Transition
+
+deck = (
+    Presentation("Talk", theme=Theme.WHITE, transition=Transition.SLIDE)
+    .navigation(hash=True, progress=True)
+    .deep_links(hash=True)
+    .slide_numbers(SlideNumber.H_DOT_V)
+    .presentation_size(1280, 720)
 )
+
+slide = Slide()
+slide.id = "intro"
+slide.title = "Hello"
+deck.add(slide)
 ```
 
-## Theme vs transition
+## Helper methods
 
-| Setting | How to set | Notes |
-| -------- | ----------- | ----- |
-| Theme | `set_theme("dracula")` | Loads `revealjs/dist/theme/<name>.css` |
-| Transition | `set_transition("fade")` or `configure(transition="fade")` | `configure()` wins at render time |
+| Method | Purpose |
+| ------ | ------- |
+| `navigation()` | Controls, progress, touch, overview, keyboard |
+| `deep_links()` | Hash URLs and slide deep linking |
+| `slide_numbers()` | Slide number format |
+| `scroll_view()` | Scrollable deck layout |
+| `print_view()` | Print-optimized layout |
+| `presentation_size()` | Base width/height and scale bounds |
+| `preview_links()` | Global link lightbox previews |
+| `configure(**options)` | Any other reveal.js option |
 
-## Supported themes
-
-`beige`, `black`, `black-contrast`, `blood`, `dracula`, `league`, `moon`, `night`, `serif`, `simple`, `sky`, `solarized`, `white`, `white-contrast`
-
-## Supported transitions
-
-`none`, `slide`, `fade`, `convex`, `concave`, `zoom`
-
-## Output directory
+### Scroll view
 
 ```python
-presentation.save_to_file("deck.html", output_dir="build/my-talk")
+deck.scroll_view()
+```
+
+### Raw configure passthrough
+
+```python
+deck.configure(hash=True, progress=True, slideNumber="h.v", controls=True)
+```
+
+## Theme and transition
+
+Use typed enums. See [Choices](choices.md):
+
+| Setting | How to set |
+| ------- | ---------- |
+| Theme | `Presentation(theme=Theme.DRACULA)` or `set_theme(Theme.DRACULA)` |
+| Transition | `Presentation(transition=Transition.FADE)` or `set_transition(Transition.FADE)` |
+
+`configure(transition="zoom")` overrides the presentation default at render time.
+
+## Export
+
+```python
+# Simple: creates parent directories
+deck.save("output/talk/deck.html")
+
+# Show PDF export URL after save
+deck.save("output/talk/deck.html", pdf_hint=True)
+
+# Build the print URL manually
+Presentation.pdf_print_url("output/talk/deck.html")
+# -> output/talk/deck.html?print-pdf
+
+# Legacy: fixed output folder name
+deck.save_to_file("deck.html", output_dir="build/my-talk")
+
+# HTML string only
+html = deck.html()
+```
+
+Open the `?print-pdf` URL in Chromium and print to PDF. See [reveal.js PDF export](https://revealjs.com/pdf-export/).
+
+`save()` copies reveal.js assets into the output folder by default.
+
+## Extra CSS
+
+```python
+deck.stylesheet("custom.css")
+deck.css("section { font-size: 28px; }")
 ```

@@ -4,97 +4,83 @@ icon: lucide/paintbrush-vertical
 
 # Backgrounds
 
-Slide backgrounds map to reveal.js `data-background-*` attributes.
+Slide backgrounds map to reveal.js `data-background-*` attributes. You do not need background classes for typical use; pass plain values to `bg()`.
 
-## Color
+## Plain values (preferred)
 
 ```python
-from pyreveal import ColorBackground, Slide
+from pyreveal import BackgroundSize, BackgroundType, Presentation, Slide
 
-slide = Slide(
-    content="<h2>Colored slide</h2>",
-    background=ColorBackground("#2d3436"),
+# Color string
+slide = Slide()
+slide.title = "Colored"
+slide.bg("#2d3436")
+
+# Image path
+slide.bg("photos/bg.jpg")
+
+# Image with options
+slide.bg(image="bg.jpg", size=BackgroundSize.COVER, opacity=0.6)
+
+# Explicit type via enum
+slide.bg(type=BackgroundType.GRADIENT, gradient="linear-gradient(to bottom, #283b95, #17b2c3)")
+
+# Video
+slide.bg(type=BackgroundType.VIDEO, video="assets/loop.mp4")
+
+# Iframe
+slide.bg(
+    type=BackgroundType.IFRAME,
+    iframe="https://example.com",
+    interactive=True,
 )
 ```
 
-## Gradient
+## Deck default background
+
+Apply a background to every slide that does not set its own:
 
 ```python
-from pyreveal import GradientBackground, Slide
-
-slide = Slide(
-    content="<h2>Gradient</h2>",
-    background=GradientBackground("linear-gradient(to bottom, #283b95, #17b2c3)"),
-)
+deck = Presentation("Talk")
+deck.bg("#1a1a2e", opacity=0.9)
+# or
+deck.bg("default-bg.jpg")
 ```
 
-## Image
+## Shared options
+
+All background types accept optional `opacity`, `position`, `repeat`, `transition`, and `parallax`.
 
 ```python
-from pyreveal import ImageBackground, Slide
-
-slide = Slide(
-    content="<h2>Photo background</h2>",
-    background=ImageBackground("photos/bg.jpg", size="cover"),
-)
-```
-
-## Video
-
-```python
-from pyreveal import Slide, VideoBackground
-
-slide = Slide(
-    content="<h2>Video background</h2>",
-    background=VideoBackground("assets/loop.mp4"),
-)
-```
-
-## Iframe
-
-```python
-from pyreveal import IframeBackground, Slide
-
-slide = Slide(
-    content="<h2>Live page</h2>",
-    background=IframeBackground(
-        "https://example.com",
-        interactive=True,
-        preload=True,
-    ),
-)
+slide.bg(image="bg.jpg", size=BackgroundSize.COVER, opacity=0.6, position="center")
 ```
 
 ## Video with multiple formats
 
 ```python
-from pyreveal import VideoBackground
-
-VideoBackground(sources=["clip.mp4", "clip.webm"], preload=True, color="#000000")
+slide.bg(
+    type=BackgroundType.VIDEO,
+    sources=["clip.mp4", "clip.webm"],
+    preload=True,
+)
 ```
 
-## Shared options
+## Advanced: background classes
 
-All background types accept optional `opacity`, `position`, `repeat`, `transition`, and `parallax` keyword arguments.
-
-```python
-ImageBackground("bg.jpg", size="cover", opacity=0.6, position="center")
-```
-
-## Presentation default
-
-Apply a background to every slide that does not set its own:
+For fine-grained control, background classes remain available:
 
 ```python
-presentation.set_background(ColorBackground("#2d3436"))
+from pyreveal import ColorBackground, GradientBackground, ImageBackground
+
+slide.bg(ColorBackground("#2d3436"))
+slide.bg(ImageBackground("bg.jpg", size="cover"))
 ```
 
 ## Factory helper
 
 ```python
-from pyreveal import BackgroundFactory
+from pyreveal import BackgroundFactory, BackgroundType
 
-bg = BackgroundFactory.create_background("color", "#1a1a2e")
-bg = BackgroundFactory.create_background("image", "bg.jpg", size="cover")
-bg = BackgroundFactory.create_background("video", "loop.mp4")
+bg = BackgroundFactory.create_background(BackgroundType.COLOR, "#1a1a2e")
+bg = BackgroundFactory.create_background(BackgroundType.IMAGE, "bg.jpg", size="cover")
 ```

@@ -4,6 +4,8 @@ icon: lucide/heart-handshake
 
 # Contributing
 
+PyReveal favors a small public API: build `Slide()` objects, add them to `Presentation`, export with `save()`. Prefer plain strings and typed enums (`Theme`, `Plugin`, …) over low-level HTML and element classes unless you need fine-grained control.
+
 ## Development setup
 
 ```bash

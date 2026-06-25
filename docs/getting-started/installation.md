@@ -37,5 +37,9 @@ reveal.js 6.x ships pre-built `dist/` files in the submodule, so you do not need
 ## Verify the install
 
 ```bash
-uv run python -c "from pyreveal import PyReveal; print(PyReveal.__module__)"
+uv run python -c "from pyreveal import Presentation, Slide, Theme; print(Theme.DRACULA.value)"
 ```
+
+## Next step
+
+[Quick start](quickstart.md) to build your first deck.

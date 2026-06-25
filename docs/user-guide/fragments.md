@@ -6,55 +6,83 @@ icon: lucide/list-ordered
 
 ## Fragments
 
-Fragments reveal content step-by-step during a slide. Use the `Fragment` element:
+Fragments reveal content step-by-step during a slide:
 
 ```python
-from pyreveal import Fragment, PyReveal, Slide
+from pyreveal import FragmentEffect, Presentation, Slide
 
-slide = Slide(content="<h2>Agenda</h2>")
-slide.add_element(Fragment("Introduction"))
-slide.add_element(Fragment("Demo", effect="grow"))
-slide.add_element(Fragment("Q&A", effect="fade-in-then-out", index=2))
-presentation.add_slide(slide)
+slide = Slide()
+slide.heading = "Agenda"
+slide.fragment("Introduction")
+slide.fragment("Demo", effect=FragmentEffect.GROW)
+slide.fragment("Q&A", effect=FragmentEffect.FADE_IN_THEN_OUT, index=2)
+
+Presentation("Talk").add(slide)
 ```
 
 ### Fragment effects
 
-`grow`, `shrink`, `fade-out`, `fade-right`, `fade-up`, `fade-down`, `fade-left`, `fade-in-then-out`, `fade-in-then-semi-out`, `highlight-red`, `highlight-blue`, `highlight-green`, or empty for the default fade-in.
+Use the `FragmentEffect` enum. See [Choices](choices.md) for the full list.
+
+```python
+slide.fragment("Grow", effect=FragmentEffect.GROW)
+slide.fragment("Fade up", effect=FragmentEffect.FADE_UP)
+slide.fragment("Highlight", effect=FragmentEffect.HIGHLIGHT_RED)
+```
+
+Plain strings like `"grow"` still work, but the enum is preferred.
+
+### Multiple fragments via kwargs
+
+```python
+Slide.make_title(
+    "Agenda",
+    fragments=[
+        ("Introduction", {"effect": FragmentEffect.GROW}),
+        "Summary",
+    ],
+)
+```
 
 ## Auto-animate
 
-Use `AutoAnimate` to assign matching `data-id` values across consecutive slides:
+Build matching slides with `Presentation.animate()`. Plain text is preferred:
 
 ```python
-from pyreveal import AutoAnimate, Element, PyReveal
+from pyreveal import Presentation, Theme
+
+deck = (
+    Presentation("Demo", theme=Theme.DRACULA)
+    .animate(
+        [
+            {"title": "Before"},
+            {"title": "After"},
+        ],
+        easing="ease-in-out",
+    )
+)
+```
+
+Each string value becomes a matched element with a `data-id`. HTML strings also work:
+
+```python
+deck.animate([
+    {"title": "<h2>Before</h2>"},
+    {"title": "<h2>After</h2>"},
+])
+```
+
+### Advanced: AutoAnimate helper
+
+For fine-grained control, use `AutoAnimate` directly:
+
+```python
+from pyreveal import AutoAnimate, Element, Presentation, Slide
 
 anim = AutoAnimate(easing="ease-in-out")
-presentation.add_slide(
-    anim.slide(matches={"title": Element(tag="h2", content="Hello")})
-)
-presentation.add_slide(
-    anim.slide(matches={"title": Element(tag="h2", content="Hello World")})
-)
+slide = anim.slide(matches={"title": Element(tag="h2", content="Hello")})
+Presentation("Talk").add(slide)
 ```
-
-### Sequence helper
-
-Build a full animation chain in one call:
-
-```python
-presentation.add_auto_animate_sequence(
-    [
-        {"title": Element(tag="h2", content="Hello")},
-        {"title": Element(tag="h2", content="Hello World")},
-        {"title": "<h2>Goodbye</h2>", "badge": Element(tag="span", content="New")},
-    ],
-    easing="ease-in-out",
-)
-```
-
-String values in a frame get `data-id` injected automatically (`AutoAnimate.html`).
-Use the `_content` key for extra HTML that is not matched across slides.
 
 ### Manual matching
 
