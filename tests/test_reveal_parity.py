@@ -135,5 +135,5 @@ def test_local_image_copied(tmp_path):
 
 def test_invalid_math_engine():
     presentation = PyReveal()
-    with pytest.raises(ValueError, match="math engine"):
+    with pytest.raises(ValueError, match="MathEngine"):
         presentation.enable_plugins("math", math_engine="not-real")

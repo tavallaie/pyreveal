@@ -1,33 +1,30 @@
 """Build slides from elements, styles, and Reveal.js configuration."""
 
-from pyreveal import ImageElement, PyReveal, Slide, Style
+from pyreveal import ImageElement, Presentation, Slide, Style, Theme, Transition
 
-presentation = PyReveal(title="Elements Demo", theme="white", transition="fade")
-presentation.configure(
-    hash=True,
-    progress=True,
-    controls=True,
-    slideNumber=True,
+title_slide = Slide()
+title_slide.title = "PyReveal Elements"
+
+styled_slide = Slide()
+styled_slide.heading("Styled image")
+styled_slide.element(
+    ImageElement(
+        image_url="path/to/image.jpg",
+        alt_text="Demo image",
+        style=Style(width="400px", margin="0 auto"),
+    )
 )
 
-title_slide = Slide(content="<h1>PyReveal Elements</h1>")
-presentation.add_slide(title_slide)
+vertical_parent = Slide()
+vertical_parent.heading = "Vertical stack"
+vertical_parent.vertical = [
+    Slide.make_text("Point one"),
+    Slide.make_text("Point two"),
+]
 
-styled_slide = Slide(content="<h2>Styled image</h2>")
-image = ImageElement(
-    image_url="path/to/image.jpg",
-    alt_text="Demo image",
-    style=Style(width="400px", margin="0 auto"),
+(
+    Presentation("Elements Demo", theme=Theme.WHITE, transition=Transition.FADE)
+    .configure(hash=True, progress=True, controls=True, slideNumber=True)
+    .add(title_slide, styled_slide, vertical_parent)
+    .save("elements_presentation.html")
 )
-styled_slide.add_element(image)
-presentation.add_slide(styled_slide)
-
-presentation.add_group(
-    [
-        Slide(content="<h2>Vertical stack</h2>"),
-        Slide(content="<p>Point one</p>"),
-        Slide(content="<p>Point two</p>"),
-    ]
-)
-
-presentation.save_to_file("elements_presentation.html")

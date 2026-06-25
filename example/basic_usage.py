@@ -1,20 +1,25 @@
-"""Canonical PyReveal usage with Slide objects."""
+"""Define slides with Slide(), then add them to the deck."""
 
-from pyreveal import ImageBackground, PyReveal, Slide
+from pyreveal import Presentation, Slide, Theme, Transition
 
-presentation = PyReveal(title="My Presentation", theme="black", transition="slide")
-presentation.configure(hash=True, progress=True, slideNumber="c/t")
+intro = Slide()
+intro.title = "Welcome to PyReveal"
+intro.subtitle("Build decks in Python")
+intro.vertical = [
+    Slide.make_text("First vertical slide"),
+    Slide.make_text("Second vertical slide"),
+]
 
-intro = Slide(content="<h1>Welcome to PyReveal</h1>", title="intro")
-intro.add_vertical_slide(Slide(content="<p>First vertical slide</p>"))
-intro.add_vertical_slide(Slide(content="<p>Second vertical slide</p>"))
-presentation.add_slide(intro)
+another = Slide()
+another.heading = "Another horizontal slide"
 
-presentation.add_slide(Slide(content="<h2>Another horizontal slide</h2>"))
+photo = Slide()
+photo.heading("Photo background")
+photo.bg("path/to/image.jpg")
 
-bg = ImageBackground(image_url="path/to/image.jpg")
-presentation.add_slide(
-    Slide(content="<h2>Slide with background</h2>", background=bg)
+deck = (
+    Presentation("My Presentation", theme=Theme.BLACK, transition=Transition.SLIDE)
+    .configure(hash=True, progress=True, slideNumber="c/t")
+    .add(intro, another, photo)
+    .save("my_presentation.html")
 )
-
-presentation.save_to_file("my_presentation.html")

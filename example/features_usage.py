@@ -1,55 +1,41 @@
-"""PyReveal feature showcase: plugins, fragments, notes, code, and backgrounds."""
+"""Build slides step by step, compose the deck, export."""
 
-from pyreveal import (
-    CodeElement,
-    ColorBackground,
-    Element,
-    Fragment,
-    ImageBackground,
-    PyReveal,
-    Slide,
+from pyreveal import FragmentEffect, Plugin, Presentation, Slide, Theme, Transition
+
+welcome = Slide()
+welcome.title("PyReveal")
+welcome.fragment("Build decks in Python", effect=FragmentEffect.GROW)
+welcome.fragment("Export portable HTML", index=1)
+welcome.note("Welcome the audience and outline the talk.")
+
+code = Slide()
+code.heading("Code")
+code.code(
+    "from pyreveal import Presentation, Slide\n\n"
+    "welcome = Slide()\n"
+    "welcome.title = 'Hi'\n"
+    "Presentation('Hello').add(welcome).save('deck.html')",
+    language="python",
+    line_numbers=True,
 )
 
-presentation = PyReveal(title="Feature Demo", theme="dracula", transition="fade")
-presentation.configure(hash=True, progress=True, slideNumber="c/t")
-presentation.enable_plugins("notes", "highlight", "markdown")
-presentation.set_background(ColorBackground("#1a1a2e", opacity=0.9))
+agenda = Slide()
+agenda.markdown = "## Agenda\n\n- Slides\n- Fragments\n- Plugins"
+agenda.bg(image="path/to/bg.jpg", size="cover", position="center")
 
-intro = Slide(
-    content="<h1>PyReveal 0.5</h1>",
-    notes="Welcome the audience and outline the talk.",
-    auto_animate=True,
-)
-intro.add_element(Fragment("Build decks in Python", effect="grow"))
-intro.add_element(Fragment("Export portable HTML", index=1))
-presentation.add_slide(intro)
-
-code_slide = Slide(content="<h2>Code</h2>")
-code_slide.add_element(
-    CodeElement(
-        "from pyreveal import PyReveal, Slide\n\n"
-        "deck = PyReveal(title='Hello')\n"
-        "deck.add_slide(Slide(content='<h1>Hi</h1>'))",
-        language="python",
-        line_numbers=True,
+deck = (
+    Presentation("Feature Demo", theme=Theme.DRACULA, transition=Transition.FADE)
+    .configure(hash=True, progress=True, slideNumber="c/t")
+    .plugins(Plugin.NOTES, Plugin.HIGHLIGHT, Plugin.MARKDOWN)
+    .bg("#1a1a2e", opacity=0.9)
+    .add(welcome, code)
+    .animate(
+        [
+            {"title": "Before"},
+            {"title": "After"},
+        ],
+        easing="ease-in-out",
     )
+    .add(agenda)
+    .save("feature_demo.html")
 )
-presentation.add_slide(code_slide)
-
-presentation.add_auto_animate_sequence(
-    [
-        {"title": Element(tag="h2", content="Before")},
-        {"title": Element(tag="h2", content="After")},
-    ],
-    easing="ease-in-out",
-)
-
-presentation.add_slide(
-    Slide(
-        content="<h2>Markdown slide</h2>",
-        markdown="## Agenda\n\n- Slides\n- Fragments\n- Plugins",
-        background=ImageBackground("path/to/bg.jpg", size="cover", position="center"),
-    )
-)
-
-presentation.save_to_file("feature_demo.html")

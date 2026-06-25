@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import re
 from html import escape
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
+from .content import looks_like_html
 
 if TYPE_CHECKING:
     from .background import Background
@@ -10,6 +12,48 @@ if TYPE_CHECKING:
     from .slide import Slide
 
 _TAG_OPEN = re.compile(r"^<(\w+)([^>]*)>", re.DOTALL)
+
+_MATCH_DEFAULT_TAGS = {
+    "title": "h2",
+    "heading": "h2",
+    "subtitle": "p",
+    "body": "p",
+}
+
+
+def coerce_animate_match(key: str, value: str | dict[str, Any] | Element) -> Element:
+    """Turn plain text or a small dict into a matched Element."""
+    from .element import Element
+
+    if isinstance(value, Element):
+        element = value
+        if element.data_id is not None and element.data_id != key:
+            raise ValueError(
+                f"Element data_id {element.data_id!r} does not match key {key!r}"
+            )
+        element.set_data_id(key)
+        return element
+
+    if isinstance(value, str):
+        tag = _MATCH_DEFAULT_TAGS.get(key, "h2")
+        element = Element(tag=tag, content=value)
+        element.set_data_id(key)
+        return element
+
+    if isinstance(value, dict):
+        text = value.get("text")
+        if not isinstance(text, str):
+            raise TypeError(
+                f"animate frame {key!r} dict must include a 'text' string"
+            )
+        tag = value.get("tag", _MATCH_DEFAULT_TAGS.get(key, "h2"))
+        element = Element(tag=tag, content=text)
+        element.set_data_id(key)
+        return element
+
+    raise TypeError(
+        f"animate frame values must be str, dict, or Element, got {type(value).__name__}"
+    )
 
 
 class AutoAnimate:
@@ -26,7 +70,7 @@ class AutoAnimate:
 
     @staticmethod
     def html(key: str, markup: str) -> str:
-        """Return HTML with ``data-id`` injected into the first opening tag."""
+        """Inject ``data-id`` into an HTML string."""
         markup = markup.strip()
         match = _TAG_OPEN.match(markup)
         if not match:
@@ -43,21 +87,25 @@ class AutoAnimate:
     def slide(
         self,
         *,
+        body: str = "",
         content: str = "",
         matches: dict[str, Element] | None = None,
         notes: str | None = None,
         background: Background | None = None,
     ) -> Slide:
         """Create one auto-animate slide with keyed elements."""
+        from .content import as_content
         from .slide import Slide
 
+        extra = body or content
         slide = Slide(
-            content=content,
-            background=background,
             notes=notes,
+            background=background,
             auto_animate=True,
             auto_animate_easing=self.easing,
         )
+        if extra:
+            slide.add(as_content(extra))
         for key, element in (matches or {}).items():
             if element.data_id is not None and element.data_id != key:
                 raise ValueError(
@@ -69,18 +117,17 @@ class AutoAnimate:
 
     def sequence(
         self,
-        frames: list[dict[str, Element | str]],
+        frames: list[dict[str, Any]],
         *,
         content_key: str = "_content",
     ) -> list[Slide]:
-        """Create a series of auto-animate slides from keyed element dicts per frame.
+        """Create auto-animate slides from keyed dicts per frame.
 
-        Each frame maps a match key to an :class:`~pyreveal.element.Element`.
-        Use *content_key* (default ``"_content"``) for extra HTML on a frame.
+        Values can be plain text (preferred), HTML strings, Elements, or dicts.
         """
         slides: list[Slide] = []
         for frame in frames:
-            content = ""
+            body = ""
             matches: dict[str, Element] = {}
             for key, value in frame.items():
                 if key == content_key:
@@ -89,12 +136,10 @@ class AutoAnimate:
                             f"Frame entry {content_key!r} must be a string, "
                             f"got {type(value).__name__}"
                         )
-                    content = value
-                elif isinstance(value, str):
-                    content += self.html(key, value)
+                    body = value
+                elif isinstance(value, str) and looks_like_html(value):
+                    body += self.html(key, value)
                 else:
-                    matches[key] = value
-            slides.append(
-                self.slide(content=content, matches=matches or None)
-            )
+                    matches[key] = coerce_animate_match(key, value)
+            slides.append(self.slide(body=body, matches=matches or None))
         return slides

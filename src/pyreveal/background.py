@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from html import escape
 
+from .choices import BackgroundType, coerce_background_type
 from .exceptions import InvalidBackgroundTypeError
 
 
@@ -137,15 +138,21 @@ class IframeBackground(Background):
 
 class BackgroundFactory:
     @staticmethod
-    def create_background(bg_type: str, value: str, **kwargs) -> Background:
-        if bg_type == "color":
+    def create_background(
+        bg_type: BackgroundType | str, value: str, **kwargs
+    ) -> Background:
+        try:
+            kind = coerce_background_type(bg_type)
+        except ValueError as exc:
+            raise InvalidBackgroundTypeError(bg_type) from exc
+        if kind == BackgroundType.COLOR.value:
             return ColorBackground(value, **kwargs)
-        if bg_type == "gradient":
+        if kind == BackgroundType.GRADIENT.value:
             return GradientBackground(value, **kwargs)
-        if bg_type == "image":
+        if kind == BackgroundType.IMAGE.value:
             return ImageBackground(value, **kwargs)
-        if bg_type == "video":
+        if kind == BackgroundType.VIDEO.value:
             return VideoBackground(value, **kwargs)
-        if bg_type == "iframe":
+        if kind == BackgroundType.IFRAME.value:
             return IframeBackground(value, **kwargs)
         raise InvalidBackgroundTypeError(bg_type)

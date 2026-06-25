@@ -4,11 +4,12 @@ PyReveal is a Python library for building [Reveal.js](https://revealjs.com/) pre
 
 ## Features
 
-- Build slides with `Slide`, `Element`, and `Style` objects
-- Themes, transitions, and backgrounds (color, image, video, iframe)
-- Fragments, speaker notes, code blocks, math, Markdown, and layout helpers
-- Backgrounds: color, gradient, image, video (multi-format), iframe (interactive)
-- `enable_plugins()` for notes, highlight, markdown, math (KaTeX/MathJax), search, zoom
+- **Two-class API:** build `Slide` objects, add them to `Presentation`
+- **No HTML required:** `title`, `text`, `bullets`, `code`, `image`, fragments, notes
+- **Typed choices:** `Theme`, `Transition`, `Plugin`, `FragmentEffect`, and more
+- **Reorderable vertical slides:** `slide.vertical = [child_a, child_b]`
+- Themes, transitions, backgrounds (color, image, video, iframe, gradient)
+- Plugins: notes, highlight, markdown, math (KaTeX/MathJax), search, zoom
 - `configure()` for Reveal.js options (hash URLs, progress bar, scroll view, etc.)
 - Export self-contained HTML with bundled reveal.js assets
 
@@ -44,60 +45,54 @@ uv sync --dev
 ## Quick start
 
 ```python
-from pyreveal import PyReveal, Slide
+from pyreveal import Plugin, Presentation, Slide, Theme, Transition
 
-presentation = PyReveal(title="My Presentation", theme="white", transition="slide")
-presentation.configure(hash=True, progress=True, slideNumber="c/t")
+intro = Slide()
+intro.title = "Welcome"
+intro.subtitle("Build decks in Python")
+intro.vertical = [
+    Slide.make_text("First point"),
+    Slide.make_text("Second point"),
+]
 
-intro = Slide(content="<h1>Welcome</h1>")
-intro.add_vertical_slide(Slide(content="<p>Details</p>"))
-presentation.add_slide(intro)
-
-presentation.save_to_file("my_presentation.html")
-```
-
-See `example/basic_usage.py`, `example/elements_usage.py`, and `example/features_usage.py` for more.
-
-## Slides and elements
-
-```python
-from pyreveal import ImageBackground, ImageElement, PyReveal, Slide, Style
-
-presentation = PyReveal(title="Demo", theme="black")
-slide = Slide(content="<h2>Hello</h2>", background=ImageBackground("bg.jpg"))
-slide.add_element(
-    ImageElement("chart.png", alt_text="Chart", style=Style(width="500px"))
-)
-presentation.add_slide(slide)
-```
-
-Vertical stacks can also be added with `add_group([slide1, slide2, ...])`.
-
-## Reveal.js configuration
-
-Pass any [reveal.js config](https://revealjs.com/config/) option via `configure()`:
-
-```python
-presentation.configure(
-    hash=True,
-    progress=True,
-    slideNumber="h.v",
-    view="scroll",  # scroll mode (reveal.js 5+)
+(
+    Presentation("My Presentation", theme=Theme.WHITE, transition=Transition.SLIDE)
+    .configure(hash=True, progress=True, slideNumber="c/t")
+    .plugins(Plugin.NOTES)
+    .add(intro)
+    .save("my_presentation.html")
 )
 ```
 
-Theme is selected with `set_theme()` (CSS). Transition defaults come from `set_transition()` but can be overridden in `configure(transition="fade")`.
+Define slides with `Slide()`, add them with `Presentation.add()`. `PyReveal` is an alias for `Presentation`.
+
+## Slides
+
+```python
+from pyreveal import BackgroundSize, FragmentEffect, Presentation, Slide, Theme
+
+welcome = Slide()
+welcome.title = "Agenda"
+welcome.fragment("Introduction", effect=FragmentEffect.GROW)
+welcome.bullets(["One", "Two", "Three"])
+
+chart = Slide()
+chart.heading("Chart")
+chart.image("chart.png")
+chart.bg("bg.jpg", size=BackgroundSize.COVER)
+
+Presentation("Demo", theme=Theme.BLACK).add(welcome, chart)
+```
+
+Backgrounds accept color strings (`"#222"`), image paths, or dicts. No extra classes needed.
 
 ## Auto-animate
 
 ```python
-from pyreveal import AutoAnimate, Element
-
-anim = AutoAnimate()
-presentation.add_auto_animate_sequence(
+Presentation("Demo").animate(
     [
-        {"title": Element(tag="h2", content="Hello")},
-        {"title": Element(tag="h2", content="Hello World")},
+        {"title": "Before"},
+        {"title": "After"},
     ]
 )
 ```
@@ -133,4 +128,4 @@ uv build
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT. See [LICENSE](./LICENSE).

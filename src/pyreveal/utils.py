@@ -16,6 +16,7 @@ def wrap_in_html_template(
     initialize_options: dict,
     plugins: list[str] | None = None,
     *,
+    custom_plugins: list | None = None,
     math_engine: str = "katex",
     extra_css: list[str] | None = None,
     inline_css: str | None = None,
@@ -23,7 +24,11 @@ def wrap_in_html_template(
     """Wrap slides HTML in a Reveal.js 6.x-compatible template."""
     plugins = plugins or []
     config_js = serialize_initialize_options(initialize_options)
-    plugin_scripts = plugin_script_tags(plugins) if plugins else ""
+    plugin_scripts = (
+        plugin_script_tags(plugins, custom_plugins)
+        if plugins or custom_plugins
+        else ""
+    )
     highlight_css = (
         '\n    <link rel="stylesheet" href="revealjs/dist/plugin/highlight/monokai.css">'
         if "highlight" in plugins
@@ -37,8 +42,8 @@ def wrap_in_html_template(
         f"\n    <style>\n{inline_css}\n    </style>" if inline_css else ""
     )
     plugin_init = (
-        f",\n            plugins: [{plugin_initialize_list(plugins, math_engine=math_engine)}]"
-        if plugins
+        f",\n            plugins: [{plugin_initialize_list(plugins, math_engine=math_engine, custom_plugins=custom_plugins)}]"
+        if plugins or custom_plugins
         else ""
     )
     plugin_block = f"\n{plugin_scripts}" if plugin_scripts else ""

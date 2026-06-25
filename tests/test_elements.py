@@ -4,6 +4,7 @@ from pyreveal import (
     CodeElement,
     Element,
     Fragment,
+    FragmentEffect,
     ImageElement,
     MarkdownElement,
     SpeakerNotes,
@@ -20,7 +21,7 @@ def test_fragment_basic():
 
 
 def test_fragment_with_effect_and_index():
-    frag = Fragment("Grow", effect="grow", index=2)
+    frag = Fragment("Grow", effect=FragmentEffect.GROW, index=2)
     html = frag.generate_html()
     assert 'class="fragment grow"' in html
     assert 'data-fragment-index="2"' in html

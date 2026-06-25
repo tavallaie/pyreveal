@@ -12,7 +12,23 @@ from .background import (
     ImageBackground,
     VideoBackground,
 )
+from .content import BulletList, Content, Heading, Paragraph
 from .core import PyReveal
+from .choices import (
+    BackgroundSize,
+    BackgroundType,
+    CustomPlugin,
+    FragmentEffect,
+    MathEngine,
+    Plugin,
+    ScrollLayout,
+    ScrollSnap,
+    SlideNumber,
+    SlideVisibility,
+    Theme,
+    Transition,
+    View,
+)
 from .element import (
     CodeElement,
     Element,
@@ -25,13 +41,34 @@ from .element import (
     VideoElement,
 )
 from .layouts import FitText, HStack, Layout, Stack, VStack
+from .presentation import Presentation
 from .slide import Slide
 from .style import CSS, Style
 
 __all__ = [
-    "AutoAnimate",
+    "Presentation",
     "PyReveal",
     "Slide",
+    "Theme",
+    "Transition",
+    "Plugin",
+    "CustomPlugin",
+    "MathEngine",
+    "View",
+    "SlideNumber",
+    "ScrollLayout",
+    "ScrollSnap",
+    "BackgroundType",
+    "BackgroundSize",
+    "SlideVisibility",
+    "FragmentEffect",
+    "__version__",
+    # Advanced / low-level (optional)
+    "Content",
+    "Heading",
+    "Paragraph",
+    "BulletList",
+    "AutoAnimate",
     "Element",
     "Fragment",
     "SpeakerNotes",
@@ -55,5 +92,4 @@ __all__ = [
     "ImageBackground",
     "VideoBackground",
     "IframeBackground",
-    "__version__",
 ]

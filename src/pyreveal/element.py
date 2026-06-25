@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from html import escape
 
+from .choices import FragmentEffect, coerce_fragment_effect
 from .style import Style
 
 
@@ -54,35 +55,16 @@ class Element:
 class Fragment(Element):
     """Stepped reveal fragment (reveal.js ``.fragment``)."""
 
-    VALID_EFFECTS = frozenset(
-        {
-            "",
-            "grow",
-            "shrink",
-            "fade-out",
-            "fade-right",
-            "fade-up",
-            "fade-down",
-            "fade-left",
-            "fade-in-then-out",
-            "fade-in-then-semi-out",
-            "highlight-red",
-            "highlight-blue",
-            "highlight-green",
-        }
-    )
-
     def __init__(
         self,
         content: str,
-        effect: str = "",
+        effect: FragmentEffect | str | None = FragmentEffect.NONE,
         index: int | None = None,
         tag: str = "span",
         **kwargs,
     ):
-        if effect not in self.VALID_EFFECTS:
-            raise ValueError(f"Unsupported fragment effect: {effect!r}")
-        class_name = "fragment" if not effect else f"fragment {effect}"
+        effect_value = coerce_fragment_effect(effect)
+        class_name = "fragment" if not effect_value else f"fragment {effect_value}"
         attributes = kwargs.pop("attributes", {})
         attributes["class"] = class_name
         super().__init__(tag=tag, content=content, attributes=attributes, **kwargs)
@@ -120,11 +102,15 @@ class ImageElement(Element):
         stretch: bool = False,
         frame: bool = False,
         lazy: bool = False,
+        preview: bool = False,
+        preview_src: str | None = None,
         **kwargs,
     ):
         super().__init__(content=image_url, tag="img", **kwargs)
         self.alt_text = alt_text
         self.lazy = lazy
+        if preview:
+            self.attributes["data-preview-image"] = preview_src or image_url
         classes: list[str] = []
         if stretch:
             classes.append("r-stretch")
@@ -160,9 +146,13 @@ class VideoElement(Element):
         autoplay: bool = False,
         loop: bool = False,
         muted: bool = False,
+        preview: bool = False,
+        preview_src: str | None = None,
         **kwargs,
     ):
         super().__init__(content=video_url, tag="video", **kwargs)
+        if preview:
+            self.attributes["data-preview-video"] = preview_src or video_url
         if stretch:
             existing = self.attributes.get("class", "")
             self.attributes["class"] = " ".join(
