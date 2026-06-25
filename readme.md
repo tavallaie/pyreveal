@@ -97,6 +97,21 @@ presentation.add_content_slide("<p>Hello</p>")
 presentation.add_slide(Slide(content="<p>Hello</p>"))
 ```
 
+## Documentation
+
+Versioned documentation is published with [Zensical](https://zensical.org/) and [mike](https://github.com/squidfunk/mike):
+
+**https://tavallaie.github.io/pyreveal/**
+
+Preview locally:
+
+```bash
+uv sync --group docs
+uv run zensical serve
+```
+
+See `docs/development/versioning.md` for publishing new doc versions.
+
 ## Development
 
 ```bash
@@ -107,6 +122,7 @@ uv build
 
 ## Links
 
+- Documentation: https://tavallaie.github.io/pyreveal/
 - Issues: https://github.com/tavallaie/pyreveal/issues
 - Source: https://github.com/tavallaie/pyreveal
 

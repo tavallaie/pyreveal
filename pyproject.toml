@@ -10,6 +10,7 @@ dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/tavallaie/pyreveal"
+Documentation = "https://tavallaie.github.io/pyreveal/"
 Repository = "https://github.com/tavallaie/pyreveal"
 Issues = "https://github.com/tavallaie/pyreveal/issues"
 
@@ -17,6 +18,13 @@ Issues = "https://github.com/tavallaie/pyreveal/issues"
 dev = [
     "pytest>=8.0",
 ]
+docs = [
+    "zensical>=0.0.46",
+    "mike",
+]
+
+[tool.uv.sources]
+mike = { git = "https://github.com/squidfunk/mike.git" }
 
 [build-system]
 requires = ["uv_build>=0.11.24,<0.12"]
