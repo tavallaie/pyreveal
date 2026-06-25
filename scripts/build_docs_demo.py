@@ -16,6 +16,11 @@ def main() -> None:
         check=True,
         cwd=ROOT,
     )
+    reveal_js = ROOT / "docs" / "demo" / "revealjs" / "dist" / "reveal.js"
+    if not reveal_js.is_file():
+        raise SystemExit(
+            "reveal.js bundle missing. Run: git submodule update --init --recursive"
+        )
 
 
 if __name__ == "__main__":

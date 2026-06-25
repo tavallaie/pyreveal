@@ -54,9 +54,11 @@ uv run mike set-default --push latest
 
 Pushes to `main` and `dev` run `.github/workflows/docs.yml`, which:
 
-1. Reads the package version from `pyproject.toml`
-2. Deploys docs with `mike deploy`
-3. Updates the `latest` alias and default redirect
+1. Checks out `src/pyreveal/revealjs` (git submodule)
+2. Builds `docs/demo/` for the home-page iframe
+3. Reads the package version from `pyproject.toml`
+4. Deploys docs with `mike deploy`
+5. Updates the `latest` alias and default redirect
 
 ## First-time setup
 
