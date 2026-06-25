@@ -28,8 +28,9 @@ from pyreveal import (
     Transition,
 )
 
-# PyReveal docs homepage copy (docs/index.md)
-DOCS_URL = "https://tavallaie.github.io/pyreveal"
+# PyReveal docs homepage copy (docs/index.md). Mike publishes under /latest/.
+DOCS_SITE = "https://tavallaie.github.io/pyreveal"
+DOCS_URL = f"{DOCS_SITE}/latest"
 GITHUB_URL = "https://github.com/tavallaie/pyreveal"
 HERO_TITLE = "Presentations, written in Python"
 HERO_TAGLINE = (
@@ -862,6 +863,10 @@ if __name__ == "__main__":
     out_dir = DOCS_DEMO_DIR if args.docs else OUTPUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
+
+    if args.docs:
+        # Relative links work from /latest/demo/demo.html for any mike version.
+        DOCS_URL = ".."
 
     path = output("demo.html", output_dir=out_dir)
     build().save(path, pdf_hint=not args.docs)
