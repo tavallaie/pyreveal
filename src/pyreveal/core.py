@@ -206,7 +206,7 @@ class PyReveal:
                 for slide in item["slides"]:
                     yield slide
             elif isinstance(item, Slide):
-                yield slide
+                yield item
                 yield from item.vertical_slides
 
     def save_to_file(self, filename="presentation.html", output_dir="presentations"):

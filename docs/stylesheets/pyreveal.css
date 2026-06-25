@@ -1,0 +1,277 @@
+/* PyReveal documentation theme — reveal.js-inspired palette */
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+
+:root,
+[data-md-color-scheme="pyreveal-light"] {
+  --pyreveal-accent: #7c3aed;
+  --pyreveal-accent-soft: #a78bfa;
+  --pyreveal-accent-glow: rgba(124, 58, 237, 0.18);
+  --pyreveal-surface: #faf8f5;
+  --pyreveal-ink: #1a1625;
+  --pyreveal-muted: #5c5670;
+  --pyreveal-border: rgba(26, 22, 37, 0.08);
+  --pyreveal-hero-start: #f3eeff;
+  --pyreveal-hero-end: #fff8f0;
+  --md-primary-fg-color: #5b21b6;
+  --md-primary-fg-color--light: #7c3aed;
+  --md-primary-fg-color--dark: #4c1d95;
+  --md-accent-fg-color: #7c3aed;
+  --md-default-bg-color: var(--pyreveal-surface);
+  --md-default-fg-color: var(--pyreveal-ink);
+  --md-code-bg-color: #f0ebf8;
+}
+
+[data-md-color-scheme="pyreveal-dark"] {
+  --pyreveal-accent: #c4b5fd;
+  --pyreveal-accent-soft: #a78bfa;
+  --pyreveal-accent-glow: rgba(167, 139, 250, 0.22);
+  --pyreveal-surface: #0f0e14;
+  --pyreveal-ink: #ece8f4;
+  --pyreveal-muted: #a39bb8;
+  --pyreveal-border: rgba(236, 232, 244, 0.1);
+  --pyreveal-hero-start: #1a1428;
+  --pyreveal-hero-end: #12101a;
+  --md-primary-fg-color: #a78bfa;
+  --md-primary-fg-color--light: #c4b5fd;
+  --md-primary-fg-color--dark: #7c3aed;
+  --md-accent-fg-color: #c4b5fd;
+  --md-default-bg-color: var(--pyreveal-surface);
+  --md-default-fg-color: var(--pyreveal-ink);
+  --md-code-bg-color: #1a1724;
+  --md-hue: 265;
+}
+
+body,
+.md-typeset {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.md-typeset code,
+.md-typeset pre code {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.md-header {
+  background: color-mix(in srgb, var(--pyreveal-surface) 82%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--pyreveal-border);
+  box-shadow: none;
+}
+
+.md-tabs {
+  background: transparent;
+  border-bottom: 1px solid var(--pyreveal-border);
+}
+
+.md-typeset a {
+  color: var(--pyreveal-accent);
+}
+
+.md-typeset a:hover {
+  color: var(--pyreveal-accent-soft);
+}
+
+/* Hero */
+
+.pyreveal-hero {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 2.5rem;
+  padding: 3rem 2.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--pyreveal-border);
+  background: linear-gradient(
+    135deg,
+    var(--pyreveal-hero-start) 0%,
+    var(--pyreveal-hero-end) 55%,
+    var(--pyreveal-surface) 100%
+  );
+  box-shadow: 0 24px 48px var(--pyreveal-accent-glow);
+}
+
+.pyreveal-hero::before {
+  content: "";
+  position: absolute;
+  inset: -40% auto auto -10%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--pyreveal-accent-glow), transparent 70%);
+  pointer-events: none;
+}
+
+.pyreveal-hero__eyebrow {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--pyreveal-accent-glow);
+  color: var(--pyreveal-accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pyreveal-hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  background: linear-gradient(120deg, var(--pyreveal-ink), var(--pyreveal-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pyreveal-hero p {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--pyreveal-muted);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.pyreveal-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.pyreveal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pyreveal-btn:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.pyreveal-btn--primary {
+  background: linear-gradient(135deg, var(--pyreveal-accent), var(--md-primary-fg-color--dark));
+  color: #fff !important;
+  box-shadow: 0 10px 24px var(--pyreveal-accent-glow);
+}
+
+.pyreveal-btn--ghost {
+  border-color: var(--pyreveal-border);
+  background: color-mix(in srgb, var(--pyreveal-surface) 70%, transparent);
+  color: var(--pyreveal-ink) !important;
+}
+
+/* Inline slide showcase (PyReveal-generated HTML) */
+
+.pyreveal-showcase {
+  margin: 2rem 0 2.5rem;
+}
+
+.pyreveal-showcase__label {
+  margin: 0 0 0.75rem;
+  color: var(--pyreveal-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pyreveal-inline-deck section,
+.pyreveal-inline-deck .showcase-inner {
+  margin: 0;
+}
+
+.pyreveal-inline-deck section {
+  display: block !important;
+  min-height: 220px;
+  padding: 2rem 2.25rem;
+  border-radius: 1rem;
+  border: 1px solid var(--pyreveal-border);
+  background: linear-gradient(145deg, #1a1628 0%, #11111b 100%);
+  color: #ece8f4;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.pyreveal-inline-deck .showcase-badge {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.18);
+  color: #c4b5fd;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pyreveal-inline-deck h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pyreveal-inline-deck p {
+  margin: 0;
+  color: #b8b0cc;
+  font-size: 1rem;
+}
+
+/* Interactive deck iframe */
+
+.pyreveal-deck-frame {
+  margin: 2rem 0 2.5rem;
+}
+
+.pyreveal-deck-frame iframe {
+  display: block;
+  width: 100%;
+  height: 420px;
+  border: 1px solid var(--pyreveal-border);
+  border-radius: 1rem;
+  background: #11111b;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.22);
+}
+
+/* Feature cards */
+
+.pyreveal-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pyreveal-features li {
+  margin: 0;
+  padding: 1.25rem 1.35rem;
+  border-radius: 1rem;
+  border: 1px solid var(--pyreveal-border);
+  background: color-mix(in srgb, var(--pyreveal-surface) 88%, var(--pyreveal-accent) 12%);
+}
+
+.pyreveal-features strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--pyreveal-ink);
+  font-size: 0.98rem;
+}
+
+.pyreveal-features span {
+  color: var(--pyreveal-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
