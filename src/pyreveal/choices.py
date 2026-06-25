@@ -89,6 +89,24 @@ class ScrollSnap(str, Enum):
     MANDATORY = "mandatory"
 
 
+class KeyboardBinding(str, Enum):
+    """Reveal.js API method names for custom keyboard shortcuts."""
+
+    NEXT = "next"
+    PREV = "prev"
+    LEFT = "left"
+    RIGHT = "right"
+    UP = "up"
+    DOWN = "down"
+    TOGGLE_PAUSE = "togglePause"
+    TOGGLE_HELP = "toggleHelp"
+    TOGGLE_OVERVIEW = "toggleOverview"
+    TOGGLE_AUTO_SLIDE = "toggleAutoSlide"
+    TOGGLE_JUMP_TO_SLIDE = "toggleJumpToSlide"
+    PREV_FRAGMENT = "prevFragment"
+    NEXT_FRAGMENT = "nextFragment"
+
+
 @dataclass(frozen=True)
 class CustomPlugin:
     """Third-party or custom reveal.js plugin script."""
@@ -209,6 +227,46 @@ def coerce_view(value: View | str | None) -> str | None:
             f"Unknown View {value!r}. Choose from: {_format_choices(View)}"
         )
     raise TypeError(f"View must be View or str, got {type(value).__name__}")
+
+
+def coerce_keyboard_bindings(
+    bindings: dict[int | str, KeyboardBinding | str | None],
+) -> dict[int, str | None]:
+    """Normalize a key-code map for reveal.js ``keyboard`` config."""
+    result: dict[int, str | None] = {}
+    for key, action in bindings.items():
+        if isinstance(key, str):
+            try:
+                key_code = int(key)
+            except ValueError as exc:
+                raise ValueError(
+                    f"Keyboard binding key must be a key code integer, got {key!r}"
+                ) from exc
+        elif isinstance(key, int):
+            key_code = key
+        else:
+            raise TypeError(
+                f"Keyboard binding keys must be int or str, got {type(key).__name__}"
+            )
+
+        if action is None:
+            result[key_code] = None
+        elif isinstance(action, KeyboardBinding):
+            result[key_code] = action.value
+        elif isinstance(action, str):
+            try:
+                result[key_code] = KeyboardBinding(action).value
+            except ValueError as exc:
+                valid = _format_choices(KeyboardBinding)
+                raise ValueError(
+                    f"Unknown keyboard action {action!r}. Choose from: {valid}"
+                ) from exc
+        else:
+            raise TypeError(
+                "Keyboard binding values must be KeyboardBinding, str, or None, "
+                f"got {type(action).__name__}"
+            )
+    return result
 
 
 def coerce_slide_number(value: bool | SlideNumber | str) -> bool | str:

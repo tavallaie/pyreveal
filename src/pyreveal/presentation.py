@@ -9,6 +9,7 @@ from .background import Background
 from .coerce import coerce_background
 from .choices import (
     CustomPlugin,
+    KeyboardBinding,
     MathEngine,
     Plugin,
     ScrollLayout,
@@ -17,6 +18,7 @@ from .choices import (
     Theme,
     Transition,
     View,
+    coerce_keyboard_bindings,
     coerce_math_engine,
     coerce_plugin,
     coerce_slide_number,
@@ -43,6 +45,7 @@ class Presentation:
     ScrollLayout = ScrollLayout
     ScrollSnap = ScrollSnap
     CustomPlugin = CustomPlugin
+    KeyboardBinding = KeyboardBinding
 
     def __init__(
         self,
@@ -60,6 +63,9 @@ class Presentation:
         self._math_engine = MathEngine.KATEX.value
         self._extra_css: list[str] = []
         self._inline_css: str | None = None
+        self._extra_head: str | None = None
+        self._extra_scripts: list[str] = []
+        self._inline_js: str | None = None
         self.set_theme(theme)
         self.set_transition(transition)
 
@@ -189,6 +195,69 @@ class Presentation:
             loop=loop,
         )
 
+    def auto_progression(
+        self,
+        interval_ms: int | bool = 5000,
+        *,
+        stoppable: bool = True,
+        loop: bool = False,
+    ) -> Presentation:
+        """Alias for :meth:`auto_slide` (reveal.js auto-progression)."""
+        return self.auto_slide(
+            interval_ms, stoppable=stoppable, loop=loop
+        )
+
+    def parallax_background(
+        self,
+        image: str,
+        *,
+        size: str | None = None,
+        repeat: str | None = None,
+        position: str | None = None,
+        horizontal: int | None = None,
+        vertical: int | None = None,
+    ) -> Presentation:
+        """Enable deck-wide parallax scrolling background.
+
+        Maps to reveal.js ``parallaxBackground*`` options. Use a large
+        ``size`` (e.g. ``"2100px 900px"``) so the image can scroll.
+        """
+        options: dict[str, Any] = {"parallaxBackgroundImage": image}
+        if size is not None:
+            options["parallaxBackgroundSize"] = size
+        if repeat is not None:
+            options["parallaxBackgroundRepeat"] = repeat
+        if position is not None:
+            options["parallaxBackgroundPosition"] = position
+        if horizontal is not None:
+            options["parallaxBackgroundHorizontal"] = horizontal
+        if vertical is not None:
+            options["parallaxBackgroundVertical"] = vertical
+        return self.configure(**options)
+
+    def keyboard_bindings(
+        self,
+        bindings: dict[int | str, KeyboardBinding | str | None],
+        *,
+        condition: str | None = None,
+    ) -> Presentation:
+        """Override default reveal.js keyboard shortcuts.
+
+        Keys are [key codes](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode)
+        (e.g. ``13`` for Enter). Values are :class:`KeyboardBinding` members,
+        matching action strings, or ``None`` to disable a default binding.
+        """
+        config: dict[str, Any] = {
+            "keyboard": coerce_keyboard_bindings(bindings),
+        }
+        if condition is not None:
+            if condition != "focused":
+                raise ValueError(
+                    "keyboard condition must be 'focused' or None"
+                )
+            config["keyboardCondition"] = condition
+        return self.configure(**config)
+
     def plugins(
         self,
         *names: Plugin | str | CustomPlugin,
@@ -228,6 +297,21 @@ class Presentation:
 
     def add_inline_css(self, css: str) -> Presentation:
         self._inline_css = css
+        return self
+
+    def extra_head(self, html: str) -> Presentation:
+        """Inject raw HTML into ``<head>`` (import maps, meta tags, etc.)."""
+        self._extra_head = html
+        return self
+
+    def script(self, path: str) -> Presentation:
+        """Add a ``<script type=\"module\">`` tag after Reveal initializes."""
+        self._extra_scripts.append(path)
+        return self
+
+    def inline_js(self, js: str) -> Presentation:
+        """Add an inline ``<script>`` block after Reveal initializes."""
+        self._inline_js = js
         return self
 
     def bg(
@@ -336,6 +420,9 @@ class Presentation:
             math_engine=self._math_engine,
             extra_css=self._extra_css,
             inline_css=self._inline_css,
+            extra_head=self._extra_head,
+            extra_scripts=self._extra_scripts,
+            inline_js=self._inline_js,
         )
 
     def save_to_string(self) -> str:
@@ -396,9 +483,12 @@ class Presentation:
         if copy_revealjs:
             revealjs_ref = files("pyreveal") / "revealjs"
             revealjs_dest = presentations_dir / "revealjs"
+            dist_reveal = revealjs_dest / "dist" / "reveal.js"
 
             with as_file(revealjs_ref) as revealjs_source:
-                if not revealjs_dest.exists():
+                if not dist_reveal.exists():
+                    if revealjs_dest.exists():
+                        shutil.rmtree(revealjs_dest)
                     shutil.copytree(revealjs_source, revealjs_dest)
 
         full_path = presentations_dir / filename

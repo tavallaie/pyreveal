@@ -19,6 +19,7 @@ from .choices import (
     BackgroundType,
     CustomPlugin,
     FragmentEffect,
+    KeyboardBinding,
     MathEngine,
     Plugin,
     ScrollLayout,
@@ -62,6 +63,7 @@ __all__ = [
     "BackgroundSize",
     "SlideVisibility",
     "FragmentEffect",
+    "KeyboardBinding",
     "__version__",
     # Advanced / low-level (optional)
     "Content",

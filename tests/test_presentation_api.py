@@ -144,3 +144,20 @@ def test_animate_accepts_plain_text():
     assert "Before" in html
     assert "After" in html
     assert 'data-id="title"' in html
+
+
+def test_save_recopies_incomplete_revealjs(tmp_path):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    stale = output_dir / "revealjs"
+    stale.mkdir()
+    (stale / "README.md").write_text("incomplete copy")
+
+    Presentation("T").add(Slide.make_text("hi")).save_to_file(
+        "deck.html",
+        output_dir=str(output_dir),
+        copy_revealjs=True,
+        quiet=True,
+    )
+
+    assert (output_dir / "revealjs" / "dist" / "reveal.js").is_file()
