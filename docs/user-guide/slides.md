@@ -1,3 +1,7 @@
+---
+icon: lucide/layers
+---
+
 # Slides
 
 A `Slide` holds HTML content, an optional background, child elements, and optional vertical slides.

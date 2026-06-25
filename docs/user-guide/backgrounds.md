@@ -1,3 +1,7 @@
+---
+icon: lucide/paintbrush-vertical
+---
+
 # Backgrounds
 
 Slide backgrounds map to reveal.js `data-background-*` attributes.

@@ -1,3 +1,7 @@
+---
+icon: lucide/presentation
+---
+
 # PyReveal
 
 PyReveal is a Python library for building [Reveal.js](https://revealjs.com/) presentations programmatically. It bundles reveal.js 6.x and exports self-contained HTML you can open locally or host anywhere.

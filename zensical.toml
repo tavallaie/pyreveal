@@ -54,8 +54,22 @@ features = [
     "search.highlight",
 ]
 
-# Theme chooser: cycle palettes via the header toggle
+# Theme chooser: cycle palettes via the header toggle (amber is default)
 # https://zensical.org/docs/setup/colors/#color-palette-toggle
+[[project.theme.palette]]
+scheme = "default"
+primary = "amber"
+accent = "amber"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to amber dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "amber"
+accent = "amber"
+toggle.icon = "lucide/palette"
+toggle.name = "Switch to teal light mode"
+
 [[project.theme.palette]]
 scheme = "default"
 primary = "teal"
@@ -82,20 +96,6 @@ scheme = "slate"
 primary = "indigo"
 accent = "indigo"
 toggle.icon = "lucide/palette"
-toggle.name = "Switch to amber light mode"
-
-[[project.theme.palette]]
-scheme = "default"
-primary = "amber"
-accent = "amber"
-toggle.icon = "lucide/moon"
-toggle.name = "Switch to amber dark mode"
-
-[[project.theme.palette]]
-scheme = "slate"
-primary = "amber"
-accent = "amber"
-toggle.icon = "lucide/palette"
 toggle.name = "Switch to purple light mode"
 
 [[project.theme.palette]]
@@ -110,7 +110,7 @@ scheme = "slate"
 primary = "purple"
 accent = "purple"
 toggle.icon = "lucide/palette"
-toggle.name = "Switch to teal light mode"
+toggle.name = "Switch to amber light mode"
 
 [project.extra.version]
 provider = "mike"

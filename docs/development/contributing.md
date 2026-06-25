@@ -1,3 +1,7 @@
+---
+icon: lucide/heart-handshake
+---
+
 # Contributing
 
 ## Development setup

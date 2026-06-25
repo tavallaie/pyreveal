@@ -1,3 +1,7 @@
+---
+icon: lucide/puzzle
+---
+
 # Elements and styles
 
 Slides can include structured HTML via `Element` subclasses and optional `Style` objects.

@@ -1,3 +1,7 @@
+---
+icon: lucide/zap
+---
+
 # Quick start
 
 This guide uses the canonical **Slide-based API**. See [Slides](../user-guide/slides.md) for vertical stacks, groups, and backgrounds.

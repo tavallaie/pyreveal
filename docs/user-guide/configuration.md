@@ -1,3 +1,7 @@
+---
+icon: lucide/sliders-horizontal
+---
+
 # Reveal.js configuration
 
 Use `configure()` to pass options to `Reveal.initialize()` in the generated HTML. See the [reveal.js config reference](https://revealjs.com/config/) for all keys.

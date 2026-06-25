@@ -1,3 +1,7 @@
+---
+icon: lucide/git-branch
+---
+
 # Documentation versioning
 
 PyReveal documentation uses [Zensical](https://zensical.org/) with [mike](https://github.com/squidfunk/mike) for versioned deployments on GitHub Pages, following the [Zensical versioning guide](https://zensical.org/docs/setup/versioning/).
