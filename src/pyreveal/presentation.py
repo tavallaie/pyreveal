@@ -489,7 +489,11 @@ class Presentation:
                 if not dist_reveal.exists():
                     if revealjs_dest.exists():
                         shutil.rmtree(revealjs_dest)
-                    shutil.copytree(revealjs_source, revealjs_dest)
+                    shutil.copytree(
+                        revealjs_source,
+                        revealjs_dest,
+                        ignore=shutil.ignore_patterns(".git"),
+                    )
 
         full_path = presentations_dir / filename
         full_path.write_text(self.generate_html(), encoding="utf-8")

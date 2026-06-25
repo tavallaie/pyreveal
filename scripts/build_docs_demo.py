@@ -21,6 +21,9 @@ def main() -> None:
         raise SystemExit(
             "reveal.js bundle missing. Run: git submodule update --init --recursive"
         )
+    git_meta = ROOT / "docs" / "demo" / "revealjs" / ".git"
+    if git_meta.exists():
+        git_meta.unlink()
 
 
 if __name__ == "__main__":
