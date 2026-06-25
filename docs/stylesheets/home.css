@@ -1,0 +1,285 @@
+/* PyReveal home: full-viewport hero, mesh reveal backdrop */
+
+body:has(.mdx-home-hero) {
+  height: 100dvh;
+  overflow: hidden;
+  background-color: #08090c;
+}
+
+/* Full-page flowing mesh backdrop */
+.mdx-home-hero__bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0c0d12 0%, #08090c 48%, #090a0f 100%);
+}
+
+.mdx-home-hero__bg::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  opacity: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 38px,
+      rgba(200, 210, 224, 0.07) 39px,
+      transparent 40px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 38px,
+      rgba(200, 210, 224, 0.07) 39px,
+      transparent 40px
+    );
+  animation: mdx-mesh-flow 28s linear infinite;
+}
+
+.no-hero-webgl .mdx-home-hero__bg::before {
+  opacity: 1;
+}
+
+@keyframes mdx-mesh-flow {
+  from {
+    transform: translate3d(0, 0, 0) skewY(-2deg);
+  }
+  to {
+    transform: translate3d(-40px, -24px, 0) skewY(-2deg);
+  }
+}
+
+.mdx-home-hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Light blur + vignette over the mesh */
+.mdx-home-hero__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  backdrop-filter: blur(5px) saturate(1.05);
+  -webkit-backdrop-filter: blur(5px) saturate(1.05);
+  background:
+    radial-gradient(ellipse 120% 90% at 50% 58%, transparent 42%, rgba(8, 9, 12, 0.12) 100%),
+    linear-gradient(90deg, rgba(8, 9, 12, 0.2) 0%, rgba(8, 9, 12, 0.02) 38%, transparent 62%);
+}
+
+.no-hero-webgl .mdx-home-hero__canvas {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Home chrome: always white on dark hero */
+body:has(.mdx-home-hero) .md-header {
+  position: relative;
+  z-index: 2;
+  color: #fff !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body:has(.mdx-home-hero) .md-header.md-header--lifted,
+body:has(.mdx-home-hero) .md-header[data-md-state="shadow"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body:has(.mdx-home-hero) .md-header a,
+body:has(.mdx-home-hero) .md-header__inner,
+body:has(.mdx-home-hero) .md-header__button,
+body:has(.mdx-home-hero) .md-header__topic,
+body:has(.mdx-home-hero) .md-header__title,
+body:has(.mdx-home-hero) .md-header__ellipsis,
+body:has(.mdx-home-hero) .md-source,
+body:has(.mdx-home-hero) .md-source__repository,
+body:has(.mdx-home-hero) .md-tabs,
+body:has(.mdx-home-hero) .md-tabs__link,
+body:has(.mdx-home-hero) .md-tabs__item,
+body:has(.mdx-home-hero) .md-footer-meta,
+body:has(.mdx-home-hero) .md-footer-meta a,
+body:has(.mdx-home-hero) .md-social__link {
+  color: #fff !important;
+}
+
+body:has(.mdx-home-hero) .md-header svg,
+body:has(.mdx-home-hero) .md-tabs svg,
+body:has(.mdx-home-hero) .md-footer-meta svg,
+body:has(.mdx-home-hero) .md-social svg {
+  color: #fff !important;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+body:has(.mdx-home-hero) .md-tabs {
+  position: relative;
+  z-index: 2;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: inset 0 -0.05rem 0 hsla(0, 0%, 100%, 0.12);
+}
+
+body:has(.mdx-home-hero) .md-tabs__item--active {
+  border-bottom: 0.05rem solid #fff !important;
+}
+
+body:has(.mdx-home-hero) .md-tabs__item--active .md-tabs__link {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+body:has(.mdx-home-hero) .md-header__option[data-md-component="palette"],
+body:has(.mdx-home-hero) label.md-header__button[for="__search"],
+body:has(.mdx-home-hero) .md-search {
+  display: none !important;
+}
+
+body:has(.mdx-home-hero) .md-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - 4.8rem);
+  overflow: hidden;
+  background: transparent;
+}
+
+.mdx-home-hero {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: transparent;
+}
+
+.mdx-teaser {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 0;
+}
+
+.mdx-teaser h1 {
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+  max-width: 28rem;
+  color: #fff;
+  text-shadow: 0 1px 24px rgba(0, 0, 0, 0.45);
+}
+
+.mdx-teaser p {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.55;
+  max-width: 32rem;
+  margin: 0 0 0.75rem;
+  color: #fff;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.4);
+}
+
+.mdx-teaser small {
+  color: rgba(255, 255, 255, 0.82) !important;
+  opacity: 1;
+}
+
+.mdx-teaser a {
+  color: inherit;
+}
+
+.mdx-teaser__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem !important;
+}
+
+.mdx-teaser .md-button {
+  margin: 0;
+  backdrop-filter: blur(6px);
+  background-color: hsla(var(--md-hue), 15%, 90%, 0.14);
+  color: #fff;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mdx-teaser .md-button:hover,
+.mdx-teaser .md-button:focus {
+  color: #fff;
+}
+
+.mdx-teaser .md-button--primary {
+  background: linear-gradient(35deg, rgba(176, 186, 198, 0.55), rgba(220, 226, 235, 0.35));
+  color: #fff;
+  border: 1px solid rgba(220, 226, 235, 0.25);
+}
+
+.mdx-teaser .md-button--primary:hover,
+.mdx-teaser .md-button--primary:focus {
+  color: #fff;
+}
+
+body:has(.mdx-home-hero) .md-main {
+  display: none;
+}
+
+body:has(.mdx-home-hero) .md-footer__inner {
+  display: none;
+}
+
+body:has(.mdx-home-hero) .md-footer {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body:has(.mdx-home-hero) .md-footer-meta,
+body:has(.mdx-home-hero) .md-footer-meta__inner,
+body:has(.mdx-home-hero) .md-footer-meta.md-typeset,
+body:has(.mdx-home-hero) .md-copyright,
+body:has(.mdx-home-hero) .md-copyright__highlight,
+body:has(.mdx-home-hero) .md-copyright a {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+body:has(.mdx-home-hero) .md-footer-meta a:hover,
+body:has(.mdx-home-hero) .md-copyright a:hover {
+  color: #fff !important;
+}
+
+body:has(.mdx-home-hero) .md-top {
+  display: none;
+}
+
+@media (max-width: 76.25em) {
+  body:has(.mdx-home-hero) .md-container {
+    height: calc(100dvh - 3.6rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mdx-home-hero__bg::before {
+    animation: none;
+  }
+
+  .mdx-teaser .md-button {
+    transition: none;
+  }
+}
