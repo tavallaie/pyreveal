@@ -2,6 +2,10 @@
 
 from pyreveal import FragmentEffect, Plugin, Presentation, Slide, Theme, Transition
 
+# Optional: kiosk auto-slide and in-deck search
+# deck.auto_slide(8000, loop=True)
+# deck.plugins(Plugin.SEARCH)
+
 welcome = Slide()
 welcome.title("PyReveal")
 welcome.fragment("Build decks in Python", effect=FragmentEffect.GROW)

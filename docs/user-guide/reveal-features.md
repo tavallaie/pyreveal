@@ -63,6 +63,20 @@ deck.add(slide)
 
 `configure(**options)` still accepts any reveal.js key not covered above.
 
+## Tier 2 helpers and guides
+
+| Item | PyReveal API / doc |
+| ---- | ------------------ |
+| Deck auto-slide | `auto_slide(interval_ms, *, stoppable, loop)` |
+| Per-slide auto-slide | `Slide(auto_slide=…)` / `data-autoslide` |
+| Auto-animate | `animate()`, `AutoAnimate.text()` — see [Fragments](fragments.md) |
+| In-deck search | `Plugin.SEARCH` — see [Search](search.md) |
+| PDF export | `save(pdf_hint=True)`, `pdf_print_url()` — see [PDF export](pdf-export.md) |
+
+| Method | reveal.js option |
+| ------ | ---------------- |
+| `auto_slide(ms)` | `autoSlide`, `autoSlideStoppable`, `loop` |
+
 ## Deep links
 
 Assign a slide id and enable hash URLs:
@@ -87,20 +101,7 @@ See [reveal.js scroll view](https://revealjs.com/scroll-view/) for behavior deta
 
 ## PDF export
 
-PyReveal does not render PDF files. Export HTML, then open the print URL in Chromium:
-
-```python
-deck.save("output/talk.html", pdf_hint=True)
-# PDF export URL: output/talk.html?print-pdf
-```
-
-Or build the URL manually:
-
-```python
-Presentation.pdf_print_url("output/talk.html")
-```
-
-Follow [reveal.js PDF export](https://revealjs.com/pdf-export/): open the `?print-pdf` URL, then print to PDF from the browser.
+PyReveal does not render PDF files. Export HTML, then open the print URL in Chromium. See the [PDF export guide](pdf-export.md).
 
 ## Lightbox previews
 

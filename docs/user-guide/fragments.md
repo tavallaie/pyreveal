@@ -72,6 +72,27 @@ deck.animate([
 ])
 ```
 
+### Key names and tags
+
+`animate()` picks an HTML tag from the frame key when you pass plain text:
+
+| Key | Default tag |
+| --- | ----------- |
+| `title`, `heading` | `h2` |
+| `subtitle`, `body` | `p` |
+| any other key | `h2` |
+
+Use a dict when you need a custom tag:
+
+```python
+deck.animate([
+    {"badge": {"text": "Draft", "tag": "span"}},
+    {"badge": {"text": "Final", "tag": "span"}},
+])
+```
+
+Matching rule: the same key in every frame shares one `data-id`. Only change content, tag, or styles between frames.
+
 ### Advanced: AutoAnimate helper
 
 For fine-grained control, use `AutoAnimate` directly:
@@ -80,12 +101,21 @@ For fine-grained control, use `AutoAnimate` directly:
 from pyreveal import AutoAnimate, Element, Presentation, Slide
 
 anim = AutoAnimate(easing="ease-in-out")
-slide = anim.slide(matches={"title": Element(tag="h2", content="Hello")})
+slide = anim.slide(
+    matches={
+        "title": AutoAnimate.text("title", "Hello"),
+        "body": AutoAnimate.text("body", "World", tag="p"),
+    }
+)
 Presentation("Talk").add(slide)
 ```
+
+`AutoAnimate.text()` sets `data-id` for you. Prefer it over hand-built `Element` objects when using plain text.
 
 ### Manual matching
 
 ```python
 AutoAnimate.match("title", Element(tag="h2", content="Title"))
 ```
+
+Use `match()` when you already have an `Element` and only need to assign the id.

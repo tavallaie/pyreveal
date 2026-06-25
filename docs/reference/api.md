@@ -81,6 +81,7 @@ Presentation(title="Untitled Presentation", *, theme=Theme.BLACK, transition=Tra
 | `print_view()` | Enable print/PDF layout |
 | `presentation_size(width, height, …)` | Base slide dimensions |
 | `preview_links(enabled=True)` | Global link lightbox previews |
+| `auto_slide(interval_ms, *, stoppable=True, loop=False)` | Deck-wide auto-advance |
 | `set_theme(theme)` | Set CSS theme (`Theme` or string) |
 | `set_transition(transition)` | Set default transition (`Transition` or string) |
 | `plugins(*plugins, math_engine=MathEngine.KATEX)` | Enable built-in and `CustomPlugin` scripts |
@@ -231,7 +232,7 @@ deck.animate(
 
 Each dict key becomes a matched element with a stable `data-id`. Plain strings are preferred; HTML strings also work.
 
-Advanced: `AutoAnimate(easing=…).sequence(frames)` or `AutoAnimate.match("id", element)`.
+Advanced: `AutoAnimate(easing=…).sequence(frames)`, `AutoAnimate.text("id", "text")`, or `AutoAnimate.match("id", element)`.
 
 ---
 

@@ -38,12 +38,23 @@ deck.add(slide)
 | `print_view()` | Print-optimized layout |
 | `presentation_size()` | Base width/height and scale bounds |
 | `preview_links()` | Global link lightbox previews |
+| `auto_slide(interval_ms, …)` | Deck-wide auto-advance (kiosk mode) |
 | `configure(**options)` | Any other reveal.js option |
 
 ### Scroll view
 
 ```python
 deck.scroll_view()
+```
+
+### Auto-slide (kiosk)
+
+Advance every slide on a timer. Per-slide `Slide(auto_slide=…)` still overrides individual slides.
+
+```python
+deck.auto_slide(5000)                    # every 5 seconds
+deck.auto_slide(3000, loop=True)         # loop the deck
+deck.auto_slide(False)                   # disable globally
 ```
 
 ### Raw configure passthrough
@@ -83,7 +94,7 @@ deck.save_to_file("deck.html", output_dir="build/my-talk")
 html = deck.html()
 ```
 
-Open the `?print-pdf` URL in Chromium and print to PDF. See [reveal.js PDF export](https://revealjs.com/pdf-export/).
+Open the `?print-pdf` URL in Chromium and print to PDF. See the [PDF export guide](pdf-export.md).
 
 `save()` copies reveal.js assets into the output folder by default.
 

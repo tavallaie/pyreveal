@@ -23,6 +23,8 @@ nav = [
         "user-guide/layouts.md",
         "user-guide/math.md",
         "user-guide/plugins.md",
+        "user-guide/search.md",
+        "user-guide/pdf-export.md",
         "user-guide/configuration.md",
         "user-guide/reveal-features.md",
     ]},

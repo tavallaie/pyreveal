@@ -89,6 +89,14 @@ deck.plugins(Plugin.MATH, math_engine=MathEngine.KATEX)
 
 See [Math](math.md) for `MathElement` details.
 
+## Search
+
+```python
+deck.plugins(Plugin.SEARCH)
+```
+
+Adds an in-deck search box. See [Search](search.md) for usage in the browser.
+
 ## Advanced: low-level elements
 
 You can still use `CodeElement`, `MarkdownElement`, and `SpeakerNotes` directly via `slide.element()`. The slide builder methods above are preferred.
