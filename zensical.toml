@@ -54,63 +54,21 @@ features = [
     "search.highlight",
 ]
 
-# Theme chooser: cycle palettes via the header toggle (amber is default)
+# Amber palette with light/dark toggle
 # https://zensical.org/docs/setup/colors/#color-palette-toggle
 [[project.theme.palette]]
 scheme = "default"
 primary = "amber"
 accent = "amber"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to amber dark mode"
+toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
 primary = "amber"
 accent = "amber"
-toggle.icon = "lucide/palette"
-toggle.name = "Switch to teal light mode"
-
-[[project.theme.palette]]
-scheme = "default"
-primary = "teal"
-accent = "teal"
-toggle.icon = "lucide/moon"
-toggle.name = "Switch to teal dark mode"
-
-[[project.theme.palette]]
-scheme = "slate"
-primary = "teal"
-accent = "teal"
-toggle.icon = "lucide/palette"
-toggle.name = "Switch to indigo light mode"
-
-[[project.theme.palette]]
-scheme = "default"
-primary = "indigo"
-accent = "indigo"
-toggle.icon = "lucide/moon"
-toggle.name = "Switch to indigo dark mode"
-
-[[project.theme.palette]]
-scheme = "slate"
-primary = "indigo"
-accent = "indigo"
-toggle.icon = "lucide/palette"
-toggle.name = "Switch to purple light mode"
-
-[[project.theme.palette]]
-scheme = "default"
-primary = "purple"
-accent = "purple"
-toggle.icon = "lucide/moon"
-toggle.name = "Switch to purple dark mode"
-
-[[project.theme.palette]]
-scheme = "slate"
-primary = "purple"
-accent = "purple"
-toggle.icon = "lucide/palette"
-toggle.name = "Switch to amber light mode"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to light mode"
 
 [project.extra.version]
 provider = "mike"
