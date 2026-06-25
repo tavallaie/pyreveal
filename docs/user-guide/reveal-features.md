@@ -29,7 +29,7 @@ PyReveal generates static reveal.js HTML. This page maps common [reveal.js featu
 | Built-in plugins | `Plugin.NOTES`, `HIGHLIGHT`, `MARKDOWN`, `MATH`, `SEARCH`, `ZOOM` |
 | Custom plugins | `CustomPlugin(script, init)` |
 
-## Tier 1 helpers (typed shortcuts)
+## Fluent helpers
 
 These wrap `configure()` with enums and fluent methods:
 
@@ -62,13 +62,16 @@ deck.add(slide)
 | `print_view()` | `view: "print"` |
 | `presentation_size()` | `width`, `height`, `margin`, `minScale`, `maxScale` |
 | `preview_links()` | `previewLinks` |
+| `auto_slide(ms)` / `auto_progression(ms)` | `autoSlide`, `autoSlideStoppable`, `loop` |
+| `parallax_background(image, …)` | `parallaxBackgroundImage`, `parallaxBackgroundSize`, `parallaxBackgroundHorizontal`, `parallaxBackgroundVertical`, … |
+| `keyboard_bindings(bindings, …)` | `keyboard`, `keyboardCondition` |
 
 `configure(**options)` still accepts any reveal.js key not covered above.
 
-## Tier 2 helpers and guides
+## Guides for common workflows
 
-| Item | PyReveal API / doc |
-| ---- | ------------------ |
+| Topic | PyReveal API / doc |
+| ----- | ------------------ |
 | Deck auto-slide / auto-progression | `auto_slide()`, `auto_progression()` |
 | Per-slide auto-slide | `Slide(auto_slide=…)` / `data-autoslide` |
 | Parallax background | `parallax_background(image, *, size, horizontal, vertical, …)` |
@@ -76,12 +79,6 @@ deck.add(slide)
 | Auto-animate | `animate()`, `AutoAnimate.text()` — see [Fragments](fragments.md) |
 | In-deck search | `Plugin.SEARCH` — see [Search](search.md) |
 | PDF export | `save(pdf_hint=True)`, `pdf_print_url()` — see [PDF export](pdf-export.md) |
-
-| Method | reveal.js option |
-| ------ | ---------------- |
-| `auto_slide(ms)` / `auto_progression(ms)` | `autoSlide`, `autoSlideStoppable`, `loop` |
-| `parallax_background(image, …)` | `parallaxBackgroundImage`, `parallaxBackgroundSize`, `parallaxBackgroundHorizontal`, `parallaxBackgroundVertical`, … |
-| `keyboard_bindings(bindings, …)` | `keyboard`, `keyboardCondition` |
 
 ## Deep links
 
