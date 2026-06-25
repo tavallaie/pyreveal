@@ -171,6 +171,24 @@ class Presentation:
         """Enable global link lightbox previews (``previewLinks``)."""
         return self.configure(previewLinks=enabled)
 
+    def auto_slide(
+        self,
+        interval_ms: int | bool = 5000,
+        *,
+        stoppable: bool = True,
+        loop: bool = False,
+    ) -> Presentation:
+        """Enable deck-wide auto-advance (reveal.js ``autoSlide``).
+
+        Pass an interval in milliseconds for kiosk-style decks, ``0`` to only
+        honor per-slide ``data-autoslide``, or ``False`` to disable globally.
+        """
+        return self.configure(
+            autoSlide=interval_ms,
+            autoSlideStoppable=stoppable,
+            loop=loop,
+        )
+
     def plugins(
         self,
         *names: Plugin | str | CustomPlugin,

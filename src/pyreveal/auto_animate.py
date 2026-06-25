@@ -69,6 +69,14 @@ class AutoAnimate:
         return element
 
     @staticmethod
+    def text(key: str, text: str, *, tag: str | None = None) -> Element:
+        """Build a matched element from plain text (preferred for hand-built slides)."""
+        return coerce_animate_match(
+            key,
+            {"text": text, "tag": tag} if tag is not None else text,
+        )
+
+    @staticmethod
     def html(key: str, markup: str) -> str:
         """Inject ``data-id`` into an HTML string."""
         markup = markup.strip()
