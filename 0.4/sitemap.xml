@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/getting-started/installation/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/getting-started/quickstart/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/user-guide/slides/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/user-guide/elements/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/user-guide/backgrounds/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/user-guide/configuration/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/development/contributing/</loc>
+      </url>
+      <url>
+        <loc>https://tavallaie.github.io/pyreveal/0.4/development/versioning/</loc>
+      </url>
+</urlset>
