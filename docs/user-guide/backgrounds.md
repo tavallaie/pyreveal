@@ -53,7 +53,24 @@ All background types accept optional `opacity`, `position`, `repeat`, `transitio
 
 ```python
 slide.bg(image="bg.jpg", size=BackgroundSize.COVER, opacity=0.6, position="center")
+slide.bg(image="bg.jpg", parallax="2")  # per-slide parallax multiplier
 ```
+
+## Deck-wide parallax background
+
+For a single large background that scrolls as you move through the deck, use `Presentation.parallax_background()`:
+
+```python
+deck = Presentation("Talk")
+deck.parallax_background(
+    "assets/parallax.jpg",
+    size="2100px 900px",
+    horizontal=200,
+    vertical=50,
+)
+```
+
+This maps to reveal.js `parallaxBackground*` config options. See [reveal.js parallax backgrounds](https://revealjs.com/backgrounds/#parallax-background).
 
 ## Video with multiple formats
 

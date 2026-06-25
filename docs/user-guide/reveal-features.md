@@ -22,7 +22,9 @@ PyReveal generates static reveal.js HTML. This page maps common [reveal.js featu
 | Themes / transitions | `Theme`, `Transition` enums |
 | Vertical slides | `slide.vertical`, `Slide.section()` |
 | Auto-animate | `Presentation.animate()`, `auto_animate` |
-| Auto-slide | `auto_slide` on `Slide` |
+| Auto-slide / auto-progression | `auto_slide()`, `auto_progression()`, `Slide(auto_slide=…)` |
+| Parallax backgrounds | `parallax_background()`, `slide.bg(…, parallax=…)` |
+| Custom keyboard bindings | `keyboard_bindings()`, `KeyboardBinding` |
 | Speaker notes | `Plugin.NOTES`, `slide.note()` |
 | Built-in plugins | `Plugin.NOTES`, `HIGHLIGHT`, `MARKDOWN`, `MATH`, `SEARCH`, `ZOOM` |
 | Custom plugins | `CustomPlugin(script, init)` |
@@ -67,15 +69,19 @@ deck.add(slide)
 
 | Item | PyReveal API / doc |
 | ---- | ------------------ |
-| Deck auto-slide | `auto_slide(interval_ms, *, stoppable, loop)` |
+| Deck auto-slide / auto-progression | `auto_slide()`, `auto_progression()` |
 | Per-slide auto-slide | `Slide(auto_slide=…)` / `data-autoslide` |
+| Parallax background | `parallax_background(image, *, size, horizontal, vertical, …)` |
+| Keyboard bindings | `keyboard_bindings({key_code: action, …})`, `KeyboardBinding` |
 | Auto-animate | `animate()`, `AutoAnimate.text()` — see [Fragments](fragments.md) |
 | In-deck search | `Plugin.SEARCH` — see [Search](search.md) |
 | PDF export | `save(pdf_hint=True)`, `pdf_print_url()` — see [PDF export](pdf-export.md) |
 
 | Method | reveal.js option |
 | ------ | ---------------- |
-| `auto_slide(ms)` | `autoSlide`, `autoSlideStoppable`, `loop` |
+| `auto_slide(ms)` / `auto_progression(ms)` | `autoSlide`, `autoSlideStoppable`, `loop` |
+| `parallax_background(image, …)` | `parallaxBackgroundImage`, `parallaxBackgroundSize`, `parallaxBackgroundHorizontal`, `parallaxBackgroundVertical`, … |
+| `keyboard_bindings(bindings, …)` | `keyboard`, `keyboardCondition` |
 
 ## Deep links
 

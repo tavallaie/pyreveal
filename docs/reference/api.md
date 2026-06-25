@@ -22,7 +22,7 @@ from pyreveal import (
     Presentation, PyReveal, Slide,
     # Typed choices
     Theme, Transition, Plugin, MathEngine,
-    BackgroundType, BackgroundSize, SlideVisibility, FragmentEffect,
+    BackgroundType, BackgroundSize, SlideVisibility, FragmentEffect, KeyboardBinding,
     # Advanced (optional)
     Element, Fragment, CodeElement, ImageElement, MathElement, MarkdownElement,
     SpeakerNotes, VideoElement, LinkElement,
@@ -50,6 +50,7 @@ See [Choices](../user-guide/choices.md) for full enum tables and examples.
 | `BackgroundSize` | `bg(size=…)` |
 | `SlideVisibility` | slide `visibility` |
 | `FragmentEffect` | `fragment(…, effect=…)` |
+| `KeyboardBinding` | `keyboard_bindings()` action values |
 | `View` | `scroll_view()`, `print_view()` |
 | `SlideNumber` | `slide_numbers()` |
 | `ScrollLayout` / `ScrollSnap` | `scroll_view()` |
@@ -82,6 +83,9 @@ Presentation(title="Untitled Presentation", *, theme=Theme.BLACK, transition=Tra
 | `presentation_size(width, height, …)` | Base slide dimensions |
 | `preview_links(enabled=True)` | Global link lightbox previews |
 | `auto_slide(interval_ms, *, stoppable=True, loop=False)` | Deck-wide auto-advance |
+| `auto_progression(…)` | Alias for `auto_slide()` |
+| `parallax_background(image, *, size, repeat, position, horizontal, vertical)` | Deck-wide parallax background |
+| `keyboard_bindings(bindings, *, condition=None)` | Custom keyboard shortcut map |
 | `set_theme(theme)` | Set CSS theme (`Theme` or string) |
 | `set_transition(transition)` | Set default transition (`Transition` or string) |
 | `plugins(*plugins, math_engine=MathEngine.KATEX)` | Enable built-in and `CustomPlugin` scripts |

@@ -21,6 +21,7 @@ from pyreveal import (
     ScrollLayout,
     ScrollSnap,
     SlideNumber,
+    KeyboardBinding,
     SlideVisibility,
     Theme,
     Transition,
@@ -160,6 +161,18 @@ Register third-party plugin scripts:
 ```python
 CustomPlugin("assets/my-plugin.js", "RevealMyPlugin")
 ```
+
+## KeyboardBinding
+
+Reveal.js API actions for `keyboard_bindings()`. Pass `None` to disable a key.
+
+```python
+from pyreveal import KeyboardBinding, Presentation
+
+deck.keyboard_bindings({13: KeyboardBinding.NEXT, 32: None})
+```
+
+`NEXT`, `PREV`, `LEFT`, `RIGHT`, `UP`, `DOWN`, `TOGGLE_PAUSE`, `TOGGLE_HELP`, `TOGGLE_OVERVIEW`, `TOGGLE_AUTO_SLIDE`, `TOGGLE_JUMP_TO_SLIDE`, `PREV_FRAGMENT`, `NEXT_FRAGMENT`
 
 ## FragmentEffect
 

@@ -124,7 +124,7 @@ Per-slide `Slide(auto_slide=…)` / `data-autoslide` remains for overrides.
 
 ### 2.5 Example update
 
-- `example/features_usage.py` — optional comment or small block showing `auto_slide` / `Plugin.SEARCH` (keep example runnable)
+- `example/demo.py` — single runnable deck covering all features
 
 ---
 

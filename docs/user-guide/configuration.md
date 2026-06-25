@@ -39,6 +39,9 @@ deck.add(slide)
 | `presentation_size()` | Base width/height and scale bounds |
 | `preview_links()` | Global link lightbox previews |
 | `auto_slide(interval_ms, …)` | Deck-wide auto-advance (kiosk mode) |
+| `auto_progression(…)` | Alias for `auto_slide()` |
+| `parallax_background(image, …)` | Deck-wide parallax scrolling background |
+| `keyboard_bindings(bindings, …)` | Custom keyboard shortcut map |
 | `configure(**options)` | Any other reveal.js option |
 
 ### Scroll view
@@ -55,7 +58,36 @@ Advance every slide on a timer. Per-slide `Slide(auto_slide=…)` still override
 deck.auto_slide(5000)                    # every 5 seconds
 deck.auto_slide(3000, loop=True)         # loop the deck
 deck.auto_slide(False)                   # disable globally
+deck.auto_progression(5000)              # same as auto_slide()
 ```
+
+### Parallax background
+
+Deck-wide parallax uses reveal.js `parallaxBackground*` options. Per-slide parallax is still available via `slide.bg(…, parallax=…)`.
+
+```python
+deck.parallax_background(
+    "assets/parallax.jpg",
+    size="2100px 900px",
+    horizontal=200,
+    vertical=50,
+)
+```
+
+### Custom keyboard bindings
+
+Override default shortcuts with a key-code map. Use `None` to disable a key, and `KeyboardBinding` for typed actions:
+
+```python
+from pyreveal import KeyboardBinding, Presentation
+
+deck.keyboard_bindings(
+    {13: KeyboardBinding.NEXT, 32: None, 66: "togglePause"},
+    condition="focused",
+)
+```
+
+See [reveal.js keyboard bindings](https://revealjs.com/keyboard/) for key codes.
 
 ### Raw configure passthrough
 

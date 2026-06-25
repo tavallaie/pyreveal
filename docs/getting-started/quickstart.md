@@ -120,9 +120,14 @@ Plain strings without tags become paragraphs: `Slide("Just text")`.
 
 ## Examples in the repository
 
-- `example/basic_usage.py`: slides, vertical stacks, backgrounds
-- `example/features_usage.py`: fragments, plugins, code, auto-animate
-- `example/elements_usage.py`: low-level elements and styles
+Build the demo deck (mirrors the official [reveal.js demo](https://revealjs.com)):
+
+```bash
+uv run python example/demo.py
+cd example/presentations && python3 -m http.server 8765
+```
+
+Open http://localhost:8765/demo.html in your browser. Serve over HTTP so reveal.js plugins and remote demo assets load correctly.
 
 ## Versioning
 
