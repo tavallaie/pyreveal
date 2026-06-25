@@ -1,9 +1,35 @@
-from .config import serialize_initialize_options
+from __future__ import annotations
+
+from .config import (
+    plugin_initialize_list,
+    plugin_script_tags,
+    serialize_initialize_options,
+)
 
 
-def wrap_in_html_template(title, theme, slides_html, initialize_options):
+def wrap_in_html_template(
+    title: str,
+    theme: str,
+    slides_html: str,
+    initialize_options: dict,
+    plugins: list[str] | None = None,
+) -> str:
     """Wrap slides HTML in a Reveal.js 6.x-compatible template."""
+    plugins = plugins or []
     config_js = serialize_initialize_options(initialize_options)
+    plugin_scripts = plugin_script_tags(plugins) if plugins else ""
+    highlight_css = (
+        '\n    <link rel="stylesheet" href="revealjs/dist/plugin/highlight/monokai.css">'
+        if "highlight" in plugins
+        else ""
+    )
+    plugin_init = (
+        f",\n            plugins: [{plugin_initialize_list(plugins)}]"
+        if plugins
+        else ""
+    )
+    plugin_block = f"\n{plugin_scripts}" if plugin_scripts else ""
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +38,7 @@ def wrap_in_html_template(title, theme, slides_html, initialize_options):
     <title>{title}</title>
     <link rel="stylesheet" href="revealjs/dist/reset.css">
     <link rel="stylesheet" href="revealjs/dist/reveal.css">
-    <link rel="stylesheet" href="revealjs/dist/theme/{theme}.css">
+    <link rel="stylesheet" href="revealjs/dist/theme/{theme}.css">{highlight_css}
 </head>
 <body>
     <div class="reveal">
@@ -20,9 +46,9 @@ def wrap_in_html_template(title, theme, slides_html, initialize_options):
             {slides_html}
         </div>
     </div>
-    <script src="revealjs/dist/reveal.js"></script>
+    <script src="revealjs/dist/reveal.js"></script>{plugin_block}
     <script>
-        Reveal.initialize({config_js});
+        Reveal.initialize({config_js}{plugin_init});
     </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from .background import Background
-from .config import build_initialize_options
+from .config import VALID_PLUGINS, build_initialize_options
 from .exceptions import (
     DuplicateSlideTitleError,
     EmptySlideContentError,
@@ -49,8 +49,9 @@ class PyReveal:
     ):
         self.title = title
         self.slides: list[Slide | dict[str, Any]] = []
-        self.background = None
+        self.background: Background | None = None
         self._config: dict[str, Any] = {}
+        self._plugins: list[str] = []
         self.set_theme(theme)
         self.set_transition(transition)
 
@@ -62,6 +63,22 @@ class PyReveal:
         ``set_transition()``. Options passed here take precedence at render time.
         """
         self._config.update(options)
+        return self
+
+    def enable_plugins(self, *names: str) -> "PyReveal":
+        """Enable bundled reveal.js plugins in the generated HTML.
+
+        Supported: ``notes``, ``highlight``, ``markdown``, ``math``, ``search``, ``zoom``.
+        """
+        ordered: list[str] = []
+        for name in names:
+            if name not in VALID_PLUGINS:
+                raise ValueError(
+                    f"Unknown plugin {name!r}. Valid plugins: {', '.join(sorted(VALID_PLUGINS))}"
+                )
+            if name not in ordered:
+                ordered.append(name)
+        self._plugins = ordered
         return self
 
     def add_slide(self, slide: Slide) -> None:
@@ -126,7 +143,8 @@ class PyReveal:
             raise InvalidTransitionError(transition, self.VALID_TRANSITIONS)
         self.transition = transition
 
-    def set_background(self, background):
+    def set_background(self, background: Background) -> None:
+        """Set a default background for slides that do not define their own."""
         if not isinstance(background, Background):
             raise TypeError("Expected instance of Background class.")
         self.background = background
@@ -149,15 +167,23 @@ class PyReveal:
         return groups
 
     def _render_nested_slides(self, parent: Slide, children: list[Slide]) -> str:
-        background_html = parent.background.generate_html() if parent.background else ""
-        children_html = "\n".join(child.render() for child in children)
-        return (
-            f"<section{background_html}>\n{parent.render()}\n{children_html}\n</section>"
+        outer_bg = parent.background or self.background
+        outer_bg_html = outer_bg.generate_html() if outer_bg else ""
+        parent_html = parent.render(
+            default_background=self.background,
+            omit_background=bool(outer_bg),
         )
+        children_html = "\n".join(
+            child.render(default_background=self.background) for child in children
+        )
+        return f"<section{outer_bg_html}>\n{parent_html}\n{children_html}\n</section>"
 
     def _render_slide_item(self, item):
         if isinstance(item, dict) and item.get("type") == "group":
-            group_html = "\n".join(slide.render() for slide in item["slides"])
+            group_html = "\n".join(
+                slide.render(default_background=self.background)
+                for slide in item["slides"]
+            )
             return f"<section>\n{group_html}\n</section>"
 
         if not isinstance(item, Slide):
@@ -170,9 +196,9 @@ class PyReveal:
         if item.vertical_slides:
             return self._render_nested_slides(item, item.vertical_slides)
 
-        return item.render()
+        return item.render(default_background=self.background)
 
-    def generate_html(self):
+    def generate_html(self) -> str:
         rendered = []
         grouped_parents = {
             item.get("parent_title")
@@ -197,8 +223,16 @@ class PyReveal:
 
         initialize_options = build_initialize_options(self.transition, self._config)
         return wrap_in_html_template(
-            self.title, self.theme, "\n".join(rendered), initialize_options
+            self.title,
+            self.theme,
+            "\n".join(rendered),
+            initialize_options,
+            plugins=self._plugins,
         )
+
+    def save_to_string(self) -> str:
+        """Return the presentation HTML without writing to disk."""
+        return self.generate_html()
 
     def _iter_slides(self):
         for item in self.slides:
