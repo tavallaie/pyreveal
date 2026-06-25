@@ -27,6 +27,34 @@ uv run pytest
 uv build
 ```
 
+## Publish a release
+
+Releases are automated by [`.github/workflows/release.yml`](https://github.com/tavallaie/pyreveal/blob/dev/.github/workflows/release.yml). Pushing a `v*` tag runs tests, publishes to PyPI, and creates a GitHub Release with generated notes.
+
+### One-time PyPI setup
+
+1. Create the [pyreveal](https://pypi.org/project/pyreveal/) project on PyPI (first release only).
+2. On PyPI → **Publishing** → **Add a new trusted publisher**:
+   - Owner: `tavallaie`
+   - Repository: `pyreveal`
+   - Workflow: `release.yml`
+   - Environment: (leave blank unless you use a GitHub Environment)
+
+No API tokens are stored in the repository; `uv publish` uses OIDC trusted publishing.
+
+### Cut a release
+
+1. Bump `version` in `pyproject.toml` and commit.
+2. Tag and push:
+
+```bash
+git tag v0.7.0
+git push origin v0.7.0
+```
+
+3. Watch the **Release** workflow on GitHub Actions.
+4. Docs for the new version are deployed when the tag lands on `main` or `dev` (see [Documentation versioning](versioning.md)). After merging a release bump to `main`, push the tag from that commit.
+
 ## Documentation
 
 Preview docs locally:
